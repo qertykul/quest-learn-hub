@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Play, Star, Users, Clock } from 'lucide-react';
+import { Play, Star, Clock, Edit, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Course {
   id: number;
@@ -17,9 +18,11 @@ interface Course {
 
 interface CourseCardProps {
   course: Course;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
+export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete }) => {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'Новичок': return 'bg-green-100 text-green-800';
@@ -31,7 +34,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 hover:bg-white/15 border border-white/20">
+    <div className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 hover:bg-white/15 border border-white/20 relative group">
       {/* Course Image */}
       <div className="relative h-48 overflow-hidden">
         <img 
@@ -47,6 +50,40 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
             {course.level}
           </span>
         </div>
+        
+        {/* Edit/Delete buttons - shown on hover */}
+        {(onEdit || onDelete) && (
+          <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {onEdit && (
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
+                className="bg-white/90 hover:bg-white text-gray-800"
+              >
+                <Edit className="w-3 h-3" />
+              </Button>
+            )}
+            {onDelete && (
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (confirm('Вы уверены, что хотите удалить этот курс?')) {
+                    onDelete();
+                  }
+                }}
+                className="bg-red-500 hover:bg-red-600"
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            )}
+          </div>
+        )}
         
         {/* Progress overlay */}
         <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-3">
