@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Play, Star, Clock, Edit, Trash2 } from 'lucide-react';
+import { Play, Star, Clock, Edit, Trash2, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface Course {
@@ -14,6 +13,7 @@ interface Course {
   image: string;
   lessons: number;
   completedLessons: number;
+  fullLessons?: any[];
 }
 
 interface CourseCardProps {
@@ -33,8 +33,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
     }
   };
 
+  const isInteractiveCourse = course.fullLessons && course.fullLessons.length > 0;
+
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 hover:bg-white/15 border border-white/20 relative group">
+    <div className={`bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 hover:bg-white/15 border border-white/20 relative group ${isInteractiveCourse ? 'cursor-pointer' : ''}`}>
       {/* Course Image */}
       <div className="relative h-48 overflow-hidden">
         <img 
@@ -119,8 +121,17 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
 
         {/* Action Button */}
         <button className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-semibold py-3 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2">
-          <Play className="w-5 h-5" />
-          <span>Продолжить изучение</span>
+          {isInteractiveCourse ? (
+            <>
+              <BookOpen className="w-5 h-5" />
+              <span>Начать изучение</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-5 h-5" />
+              <span>Продолжить изучение</span>
+            </>
+          )}
         </button>
       </div>
     </div>
