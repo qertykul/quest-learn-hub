@@ -9,61 +9,46 @@ import { LeaderBoard } from '@/components/LeaderBoard';
 const Index = () => {
   const [activeTab, setActiveTab] = useState('courses');
 
+  const tabs = [
+    { id: 'courses', label: '📚 Курсы', component: CourseGrid },
+    { id: 'progress', label: '📊 Прогресс', component: UserProgress },
+    { id: 'achievements', label: '🏆 Достижения', component: AchievementBoard },
+    { id: 'leaderboard', label: '👑 Рейтинг', component: LeaderBoard }
+  ];
+
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || CourseGrid;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       <Header />
       
-      {/* Navigation Tabs */}
       <div className="container mx-auto px-6 py-8">
-        <div className="flex flex-wrap gap-4 mb-8">
-          <button
-            onClick={() => setActiveTab('courses')}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-              activeTab === 'courses'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105'
-                : 'bg-white/10 text-white hover:bg-white/20'
-            }`}
-          >
-            📚 Курсы
-          </button>
-          <button
-            onClick={() => setActiveTab('progress')}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-              activeTab === 'progress'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105'
-                : 'bg-white/10 text-white hover:bg-white/20'
-            }`}
-          >
-            📊 Прогресс
-          </button>
-          <button
-            onClick={() => setActiveTab('achievements')}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-              activeTab === 'achievements'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105'
-                : 'bg-white/10 text-white hover:bg-white/20'
-            }`}
-          >
-            🏆 Достижения
-          </button>
-          <button
-            onClick={() => setActiveTab('leaderboard')}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-              activeTab === 'leaderboard'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105'
-                : 'bg-white/10 text-white hover:bg-white/20'
-            }`}
-          >
-            👑 Рейтинг
-          </button>
+        {/* Enhanced Navigation Tabs */}
+        <div className="flex flex-wrap gap-4 mb-8 justify-center lg:justify-start">
+          {tabs.map((tab, index) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                activeTab === tab.id
+                  ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105 animate-pulse-glow'
+                  : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20'
+              }`}
+              style={{
+                animationDelay: `${index * 100}ms`
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* Content based on active tab */}
-        <div className="animate-fade-in">
-          {activeTab === 'courses' && <CourseGrid />}
-          {activeTab === 'progress' && <UserProgress />}
-          {activeTab === 'achievements' && <AchievementBoard />}
-          {activeTab === 'leaderboard' && <LeaderBoard />}
+        {/* Content with smooth transitions */}
+        <div 
+          key={activeTab}
+          className="animate-fade-in-up"
+        >
+          <ActiveComponent />
         </div>
       </div>
     </div>
