@@ -5,7 +5,6 @@ import { CourseForm } from './CourseForm';
 import { CourseViewer } from './CourseViewer';
 import { Button } from '@/components/ui/button';
 import { Plus, Sparkles } from 'lucide-react';
-import { creativityCourseData } from '@/data/creativityCourse';
 
 interface Course {
   id: number;
@@ -21,9 +20,7 @@ interface Course {
   fullLessons?: any[];
 }
 
-const initialCourses: Course[] = [
-  creativityCourseData
-];
+const initialCourses: Course[] = [];
 
 export const CourseGrid = () => {
   const [courses, setCourses] = useState<Course[]>(initialCourses);
@@ -34,7 +31,7 @@ export const CourseGrid = () => {
   const handleAddCourse = (courseData: Omit<Course, 'id' | 'progress' | 'completedLessons'>) => {
     const newCourse: Course = {
       ...courseData,
-      id: Math.max(...courses.map(c => c.id)) + 1,
+      id: courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1,
       progress: 0,
       completedLessons: 0,
     };
@@ -99,7 +96,7 @@ export const CourseGrid = () => {
           style={{ animationDelay: '200ms' }}
         >
           <Plus className="w-4 h-4 mr-2" />
-          Добавить курс
+          Загрузить курс
           <Sparkles className="w-4 h-4 ml-2" />
         </Button>
       </div>
@@ -125,13 +122,13 @@ export const CourseGrid = () => {
         <div className="text-center py-12 animate-bounce-in">
           <div className="text-6xl mb-4">📚</div>
           <h3 className="text-xl font-semibold text-white mb-2">Пока нет курсов</h3>
-          <p className="text-gray-300 mb-6">Добавьте свой первый курс, чтобы начать обучение!</p>
+          <p className="text-gray-300 mb-6">Загрузите свой первый курс, чтобы начать обучение!</p>
           <Button
             onClick={() => setIsFormOpen(true)}
             className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Создать первый курс
+            Загрузить первый курс
           </Button>
         </div>
       )}

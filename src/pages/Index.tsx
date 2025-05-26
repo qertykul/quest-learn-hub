@@ -23,7 +23,7 @@ const Index = () => {
       <Header />
       
       <div className="container mx-auto px-6 py-8">
-        {/* Enhanced Navigation Tabs */}
+        {/* Enhanced Navigation Tabs without pulse animation */}
         <div className="flex flex-wrap gap-4 mb-8 justify-center lg:justify-start">
           {tabs.map((tab, index) => (
             <button
@@ -31,7 +31,7 @@ const Index = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105 animate-pulse-glow'
+                  ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105'
                   : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20'
               }`}
               style={{

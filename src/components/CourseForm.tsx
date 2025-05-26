@@ -1,11 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Upload } from 'lucide-react';
 
 interface Course {
   id: number;
@@ -35,147 +35,130 @@ export const CourseForm: React.FC<CourseFormProps> = ({
   course,
   isEditing = false,
 }) => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
-    defaultValues: course ? {
-      title: course.title,
-      description: course.description,
-      level: course.level,
-      xp: course.xp,
-      badge: course.badge,
-      image: course.image,
-      lessons: course.lessons,
-    } : {
-      title: '',
-      description: '',
-      level: 'Новичок',
-      xp: 100,
-      badge: '🟡',
-      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
-      lessons: 10,
-    }
-  });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
-  const onSubmit = (data: any) => {
-    onSave({
-      ...data,
-      xp: Number(data.xp),
-      lessons: Number(data.lessons),
-    });
-    reset();
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragOver(false);
+    const file = event.dataTransfer.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleSubmit = () => {
+    if (selectedFile) {
+      // Simulate course data from file
+      const courseData = {
+        title: selectedFile.name.replace(/\.[^/.]+$/, ""),
+        description: `Курс загружен из файла ${selectedFile.name}`,
+        level: 'Новичок',
+        xp: 100,
+        badge: '📄',
+        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
+        lessons: 10,
+      };
+      
+      onSave(courseData);
+      setSelectedFile(null);
+      onClose();
+    }
+  };
+
+  const handleClose = () => {
+    setSelectedFile(null);
     onClose();
   };
 
-  const levels = ['Новичок', 'Средний', 'Продвинутый', 'Эксперт'];
-  const badges = ['🟡', '🟠', '🟢', '🔵', '🟣', '🔴'];
-
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? 'Редактировать курс' : 'Добавить новый курс'}
+            Загрузить курс из файла
           </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-4">
           <div>
-            <Label htmlFor="title">Название курса</Label>
-            <Input
-              id="title"
-              {...register('title', { required: 'Название обязательно' })}
-              placeholder="Введите название курса"
-            />
-            {errors.title && (
-              <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="description">Описание</Label>
-            <Textarea
-              id="description"
-              {...register('description', { required: 'Описание обязательно' })}
-              placeholder="Введите описание курса"
-              rows={3}
-            />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="level">Уровень сложности</Label>
-            <select
-              id="level"
-              {...register('level')}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+            <Label htmlFor="file-upload">Выберите файл курса</Label>
+            <div
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                isDragOver 
+                  ? 'border-cyan-400 bg-cyan-50/10' 
+                  : 'border-gray-300 hover:border-cyan-400'
+              }`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
             >
-              {levels.map((level) => (
-                <option key={level} value={level}>{level}</option>
-              ))}
-            </select>
+              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600 mb-2">
+                Перетащите файл сюда или нажмите для выбора
+              </p>
+              <p className="text-sm text-gray-500 mb-4">
+                Поддерживаются форматы: PDF, DOCX, TXT
+              </p>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".pdf,.docx,.txt,.json"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                Выбрать файл
+              </Button>
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="badge">Эмодзи курса</Label>
-            <select
-              id="badge"
-              {...register('badge')}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-            >
-              {badges.map((badge) => (
-                <option key={badge} value={badge}>{badge}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <Label htmlFor="xp">Награда XP</Label>
-            <Input
-              id="xp"
-              type="number"
-              {...register('xp', { required: 'XP обязательно', min: 1 })}
-              placeholder="100"
-            />
-            {errors.xp && (
-              <p className="text-red-500 text-sm mt-1">{errors.xp.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="lessons">Количество уроков</Label>
-            <Input
-              id="lessons"
-              type="number"
-              {...register('lessons', { required: 'Количество уроков обязательно', min: 1 })}
-              placeholder="10"
-            />
-            {errors.lessons && (
-              <p className="text-red-500 text-sm mt-1">{errors.lessons.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="image">URL изображения</Label>
-            <Input
-              id="image"
-              {...register('image', { required: 'URL изображения обязателен' })}
-              placeholder="https://example.com/image.jpg"
-            />
-            {errors.image && (
-              <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
-            )}
-          </div>
+          {selectedFile && (
+            <div className="bg-green-50/10 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center space-x-2">
+                <span className="text-green-600">✓</span>
+                <span className="text-sm font-medium">{selectedFile.name}</span>
+                <span className="text-xs text-gray-500">
+                  ({(selectedFile.size / 1024).toFixed(1)} KB)
+                </span>
+              </div>
+            </div>
+          )}
 
           <div className="flex gap-2 pt-4">
-            <Button type="submit" className="flex-1 bg-gradient-to-r from-cyan-400 to-blue-500">
-              {isEditing ? 'Сохранить' : 'Добавить курс'}
+            <Button 
+              onClick={handleSubmit} 
+              disabled={!selectedFile}
+              className="flex-1 bg-gradient-to-r from-cyan-400 to-blue-500"
+            >
+              Загрузить курс
             </Button>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={handleClose}>
               Отмена
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
