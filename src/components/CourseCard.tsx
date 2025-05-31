@@ -53,24 +53,9 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
           <span className="text-3xl drop-shadow-lg">{course.badge}</span>
         </div>
         
-        <div className="absolute top-4 right-4 transform group-hover:scale-110 transition-transform duration-300">
-          <span className={`px-3 py-1 rounded-full text-xs font-bold backdrop-blur-sm ${getLevelColor(course.level)}`}>
-            {course.level}
-          </span>
-        </div>
-        
-        {/* Completion badge */}
-        {course.progress === 100 && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-bounce-in">
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-3 shadow-lg">
-              <Trophy className="w-8 h-8 text-white" />
-            </div>
-          </div>
-        )}
-        
-        {/* Edit/Delete buttons with enhanced styling */}
+        {/* Edit/Delete buttons moved to top right corner */}
         {(onEdit || onDelete) && (
-          <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
             {onEdit && (
               <Button
                 size="sm"
@@ -99,6 +84,21 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
                 <Trash2 className="w-3 h-3" />
               </Button>
             )}
+          </div>
+        )}
+        
+        <div className="absolute top-4 right-4 transform group-hover:scale-110 transition-transform duration-300">
+          <span className={`px-3 py-1 rounded-full text-xs font-bold backdrop-blur-sm ${getLevelColor(course.level)}`}>
+            {course.level}
+          </span>
+        </div>
+        
+        {/* Completion badge */}
+        {course.progress === 100 && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-bounce-in">
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-3 shadow-lg">
+              <Trophy className="w-8 h-8 text-white" />
+            </div>
           </div>
         )}
         
