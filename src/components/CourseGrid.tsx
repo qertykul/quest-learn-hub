@@ -5,6 +5,7 @@ import { CourseForm } from './CourseForm';
 import { CourseViewer } from './CourseViewer';
 import { Button } from '@/components/ui/button';
 import { Plus, Sparkles } from 'lucide-react';
+import { creativityGeniusCourse } from '@/data/creativityGeniusCourse';
 
 interface Course {
   id: number;
@@ -20,7 +21,7 @@ interface Course {
   fullLessons?: any[];
 }
 
-const initialCourses: Course[] = [];
+const initialCourses: Course[] = [creativityGeniusCourse];
 
 export const CourseGrid = () => {
   const [courses, setCourses] = useState<Course[]>(initialCourses);
