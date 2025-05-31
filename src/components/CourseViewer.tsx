@@ -63,50 +63,51 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   const progressPercentage = (completedLessons / lessons.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6">
       {/* Header */}
-      <div className="max-w-4xl mx-auto mb-8">
-        <div className="flex items-center justify-between mb-4">
+      <div className="max-w-4xl mx-auto mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
           <Button
             variant="outline"
             onClick={onBack}
             className="bg-white/10 border-white/20 text-white hover:bg-white/20"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Назад к курсам
+            <span className="hidden sm:inline">Назад к курсам</span>
+            <span className="sm:hidden">Назад</span>
           </Button>
           
           <div className="flex items-center space-x-4 text-white">
             <div className="flex items-center space-x-2">
               <BookOpen className="w-5 h-5" />
-              <span>{completedLessons}/{lessons.length} уроков</span>
+              <span className="text-sm md:text-base">{completedLessons}/{lessons.length} уроков</span>
             </div>
             <div className="flex items-center space-x-2">
               <Trophy className="w-5 h-5 text-yellow-400" />
-              <span>{Math.round(progressPercentage)}%</span>
+              <span className="text-sm md:text-base">{Math.round(progressPercentage)}%</span>
             </div>
           </div>
         </div>
 
-        <h1 className="text-4xl font-bold text-white mb-4">{courseTitle}</h1>
+        <h1 className="text-2xl md:text-4xl font-bold text-white mb-4">{courseTitle}</h1>
         
         {/* Progress Bar */}
-        <div className="w-full bg-white/20 rounded-full h-3 mb-6">
+        <div className="w-full bg-white/20 rounded-full h-2 md:h-3 mb-6">
           <div 
-            className="bg-gradient-to-r from-cyan-400 to-blue-500 h-3 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 md:h-3 rounded-full transition-all duration-500"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
 
         {/* Lesson Navigation */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
           {lessons.map((lesson, index) => (
             <Button
               key={lesson.id}
               size="sm"
               variant={index === currentLessonIndex ? "default" : "outline"}
               onClick={() => setCurrentLessonIndex(index)}
-              className={`${
+              className={`text-xs md:text-sm ${
                 index === currentLessonIndex
                   ? "bg-gradient-to-r from-cyan-400 to-blue-500"
                   : "bg-white/10 border-white/20 text-white hover:bg-white/20"

@@ -37,9 +37,9 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
   const isInteractiveCourse = course.fullLessons && course.fullLessons.length > 0;
 
   return (
-    <div className={`group bg-white/10 backdrop-blur-lg rounded-3xl overflow-hidden hover:scale-105 transition-all duration-500 hover:bg-white/15 border border-white/20 relative shadow-2xl ${isInteractiveCourse ? 'cursor-pointer' : ''} animate-fade-in-up hover:shadow-cyan-500/20`}>
+    <div className={`group bg-white/10 backdrop-blur-lg rounded-2xl md:rounded-3xl overflow-hidden hover:scale-105 transition-all duration-500 hover:bg-white/15 border border-white/20 relative shadow-2xl ${isInteractiveCourse ? 'cursor-pointer' : ''} animate-fade-in-up hover:shadow-cyan-500/20`}>
       {/* Course Image with enhanced overlay */}
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-36 md:h-48 overflow-hidden">
         <img 
           src={course.image} 
           alt={course.title}
@@ -49,13 +49,13 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
         
-        <div className="absolute top-4 left-4 transform group-hover:scale-110 transition-transform duration-300">
-          <span className="text-3xl drop-shadow-lg">{course.badge}</span>
+        <div className="absolute top-3 left-3 md:top-4 md:left-4 transform group-hover:scale-110 transition-transform duration-300">
+          <span className="text-2xl md:text-3xl drop-shadow-lg">{course.badge}</span>
         </div>
         
         {/* Edit/Delete buttons moved to top right corner */}
         {(onEdit || onDelete) && (
-          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <div className="absolute top-3 right-3 md:top-4 md:right-4 flex gap-1 md:gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
             {onEdit && (
               <Button
                 size="sm"
@@ -64,9 +64,9 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
                   e.stopPropagation();
                   onEdit();
                 }}
-                className="bg-white/90 hover:bg-white text-gray-800 shadow-lg backdrop-blur-sm transform hover:scale-110 transition-all duration-200"
+                className="bg-white/90 hover:bg-white text-gray-800 shadow-lg backdrop-blur-sm transform hover:scale-110 transition-all duration-200 h-6 w-6 md:h-8 md:w-8 p-0"
               >
-                <Edit className="w-3 h-3" />
+                <Edit className="w-2.5 h-2.5 md:w-3 md:h-3" />
               </Button>
             )}
             {onDelete && (
@@ -79,16 +79,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
                     onDelete();
                   }
                 }}
-                className="bg-red-500 hover:bg-red-600 shadow-lg transform hover:scale-110 transition-all duration-200"
+                className="bg-red-500 hover:bg-red-600 shadow-lg transform hover:scale-110 transition-all duration-200 h-6 w-6 md:h-8 md:w-8 p-0"
               >
-                <Trash2 className="w-3 h-3" />
+                <Trash2 className="w-2.5 h-2.5 md:w-3 md:h-3" />
               </Button>
             )}
           </div>
         )}
         
-        <div className="absolute top-4 right-4 transform group-hover:scale-110 transition-transform duration-300">
-          <span className={`px-3 py-1 rounded-full text-xs font-bold backdrop-blur-sm ${getLevelColor(course.level)}`}>
+        <div className="absolute top-3 right-3 md:top-4 md:right-4 transform group-hover:scale-110 transition-transform duration-300">
+          <span className={`px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-bold backdrop-blur-sm ${getLevelColor(course.level)}`}>
             {course.level}
           </span>
         </div>
@@ -96,21 +96,21 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
         {/* Completion badge */}
         {course.progress === 100 && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-bounce-in">
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-3 shadow-lg">
-              <Trophy className="w-8 h-8 text-white" />
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 md:p-3 shadow-lg">
+              <Trophy className="w-6 h-6 md:w-8 md:h-8 text-white" />
             </div>
           </div>
         )}
         
         {/* Enhanced progress overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-          <div className="flex items-center justify-between text-white text-sm mb-2">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 md:p-4">
+          <div className="flex items-center justify-between text-white text-xs md:text-sm mb-2">
             <span className="font-medium">Прогресс</span>
             <span className="font-bold text-cyan-400">{course.progress}%</span>
           </div>
-          <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+          <div className="w-full bg-white/20 rounded-full h-2 md:h-3 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-cyan-400 to-blue-500 h-3 rounded-full transition-all duration-1000 relative overflow-hidden"
+              className="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 md:h-3 rounded-full transition-all duration-1000 relative overflow-hidden"
               style={{ width: `${course.progress}%` }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
@@ -120,34 +120,36 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
       </div>
 
       {/* Enhanced Course Info */}
-      <div className="p-6 relative">
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors duration-300">{course.title}</h3>
-        <p className="text-gray-300 text-sm mb-4 line-clamp-2">{course.description}</p>
+      <div className="p-4 md:p-6 relative">
+        <h3 className="text-lg md:text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors duration-300 line-clamp-2">{course.title}</h3>
+        <p className="text-gray-300 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">{course.description}</p>
         
         {/* Enhanced Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-300 mb-6">
-          <div className="flex items-center space-x-2 bg-white/5 rounded-lg px-3 py-1">
-            <Clock className="w-4 h-4 text-cyan-400" />
+        <div className="flex items-center justify-between text-xs md:text-sm text-gray-300 mb-4 md:mb-6">
+          <div className="flex items-center space-x-1 md:space-x-2 bg-white/5 rounded-lg px-2 py-1 md:px-3 md:py-1">
+            <Clock className="w-3 h-3 md:w-4 md:h-4 text-cyan-400" />
             <span>{course.completedLessons}/{course.lessons} уроков</span>
           </div>
-          <div className="flex items-center space-x-2 bg-white/5 rounded-lg px-3 py-1">
-            <Star className="w-4 h-4 text-yellow-400" />
+          <div className="flex items-center space-x-1 md:space-x-2 bg-white/5 rounded-lg px-2 py-1 md:px-3 md:py-1">
+            <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-400" />
             <span>{course.xp} XP</span>
           </div>
         </div>
 
         {/* Enhanced Action Button */}
-        <button className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-semibold py-4 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 transform hover:scale-105 hover:shadow-cyan-500/25 relative overflow-hidden group">
+        <button className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-semibold py-3 md:py-4 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 transform hover:scale-105 hover:shadow-cyan-500/25 relative overflow-hidden group text-sm md:text-base">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
           {isInteractiveCourse ? (
             <>
-              <BookOpen className="w-5 h-5 relative z-10" />
-              <span className="relative z-10">Начать изучение</span>
+              <BookOpen className="w-4 h-4 md:w-5 md:h-5 relative z-10" />
+              <span className="relative z-10 hidden sm:inline">Начать изучение</span>
+              <span className="relative z-10 sm:hidden">Изучать</span>
             </>
           ) : (
             <>
-              <Play className="w-5 h-5 relative z-10" />
-              <span className="relative z-10">Продолжить изучение</span>
+              <Play className="w-4 h-4 md:w-5 md:h-5 relative z-10" />
+              <span className="relative z-10 hidden sm:inline">Продолжить изучение</span>
+              <span className="relative z-10 sm:hidden">Продолжить</span>
             </>
           )}
         </button>

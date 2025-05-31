@@ -84,25 +84,26 @@ export const CourseGrid = () => {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
         <div className="animate-slide-in">
-          <h2 className="text-3xl font-bold text-white mb-2 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
             Мои курсы
           </h2>
-          <p className="text-gray-300">Изучайте новое каждый день</p>
+          <p className="text-gray-300 text-sm md:text-base">Изучайте новое каждый день</p>
         </div>
         <Button
           onClick={() => setIsFormOpen(true)}
-          className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-500/25 animate-fade-in"
+          className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-500/25 animate-fade-in w-full sm:w-auto"
           style={{ animationDelay: '200ms' }}
         >
           <Plus className="w-4 h-4 mr-2" />
-          Загрузить курс
+          <span className="hidden sm:inline">Загрузить курс</span>
+          <span className="sm:hidden">Курс</span>
           <Sparkles className="w-4 h-4 ml-2" />
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
         {courses.map((course, index) => (
           <div 
             key={course.id} 
@@ -120,10 +121,10 @@ export const CourseGrid = () => {
       </div>
 
       {courses.length === 0 && (
-        <div className="text-center py-12 animate-bounce-in">
-          <div className="text-6xl mb-4">📚</div>
-          <h3 className="text-xl font-semibold text-white mb-2">Пока нет курсов</h3>
-          <p className="text-gray-300 mb-6">Загрузите свой первый курс, чтобы начать обучение!</p>
+        <div className="text-center py-8 md:py-12 animate-bounce-in px-4">
+          <div className="text-4xl md:text-6xl mb-4">📚</div>
+          <h3 className="text-lg md:text-xl font-semibold text-white mb-2">Пока нет курсов</h3>
+          <p className="text-gray-300 mb-6 text-sm md:text-base">Загрузите свой первый курс, чтобы начать обучение!</p>
           <Button
             onClick={() => setIsFormOpen(true)}
             className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
