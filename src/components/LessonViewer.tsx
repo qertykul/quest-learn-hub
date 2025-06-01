@@ -68,13 +68,13 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
     <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-lg rounded-2xl p-4 md:p-8 text-white">
       {/* Lesson Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">{currentLesson.title}</h1>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 break-words">{currentLesson.title}</h1>
           <p className="text-gray-300 text-sm md:text-base">
             Урок {currentLessonIndex + 1} из {lessons.length}
           </p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 flex-shrink-0">
           {currentLesson.completed ? (
             <CheckCircle className="w-6 h-6 text-green-400" />
           ) : (
@@ -85,7 +85,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
 
       {/* Lesson Content */}
       <div className="prose prose-invert max-w-none mb-6 md:mb-8">
-        <div className="text-gray-200 leading-relaxed whitespace-pre-line text-sm md:text-base">
+        <div className="text-gray-200 leading-relaxed whitespace-pre-line text-sm md:text-base break-words">
           {currentLesson.content}
         </div>
       </div>
@@ -98,7 +98,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
             {currentLesson.exercises.map((exercise) => (
               <div key={exercise.id} className="bg-white/5 rounded-lg p-4 border border-white/10">
                 <div className="flex items-start justify-between mb-2 gap-4">
-                  <h4 className="font-semibold text-sm md:text-base">{exercise.title}</h4>
+                  <h4 className="font-semibold text-sm md:text-base break-words min-w-0 flex-1">{exercise.title}</h4>
                   <Button
                     size="sm"
                     variant={isExerciseCompleted(exercise.id) ? "default" : "outline"}
@@ -112,7 +112,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
                     )}
                   </Button>
                 </div>
-                <p className="text-gray-300 text-xs md:text-sm">{exercise.description}</p>
+                <p className="text-gray-300 text-xs md:text-sm break-words">{exercise.description}</p>
               </div>
             ))}
           </div>
@@ -127,9 +127,9 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
           disabled={currentLessonIndex === 0}
           className="bg-white/10 border-white/20 text-white hover:bg-white/20 w-full sm:w-auto order-1 sm:order-none"
         >
-          <ChevronLeft className="w-4 h-4 mr-2" />
-          <span className="hidden sm:inline">Предыдущий урок</span>
-          <span className="sm:hidden">Назад</span>
+          <ChevronLeft className="w-4 h-4 mr-2 flex-shrink-0" />
+          <span className="hidden sm:inline truncate">Предыдущий урок</span>
+          <span className="sm:hidden truncate">Назад</span>
         </Button>
 
         <Button
@@ -137,9 +137,9 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
           disabled={!allExercisesCompleted}
           className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 w-full sm:w-auto order-2 sm:order-none"
         >
-          <span className="hidden sm:inline">Завершить урок</span>
-          <span className="sm:hidden">Завершить</span>
-          <CheckCircle className="w-4 h-4 ml-2" />
+          <span className="hidden sm:inline truncate">Завершить урок</span>
+          <span className="sm:hidden truncate">Завершить</span>
+          <CheckCircle className="w-4 h-4 ml-2 flex-shrink-0" />
         </Button>
 
         <Button
@@ -148,9 +148,9 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
           disabled={currentLessonIndex === lessons.length - 1}
           className="bg-white/10 border-white/20 text-white hover:bg-white/20 w-full sm:w-auto order-3 sm:order-none"
         >
-          <span className="hidden sm:inline">Следующий урок</span>
-          <span className="sm:hidden">Вперед</span>
-          <ChevronRight className="w-4 h-4 ml-2" />
+          <span className="hidden sm:inline truncate">Следующий урок</span>
+          <span className="sm:hidden truncate">Вперед</span>
+          <ChevronRight className="w-4 h-4 ml-2 flex-shrink-0" />
         </Button>
       </div>
     </div>

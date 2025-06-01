@@ -88,7 +88,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
         )}
         
         <div className="absolute top-3 right-3 md:top-4 md:right-4 transform group-hover:scale-110 transition-transform duration-300">
-          <span className={`px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-bold backdrop-blur-sm ${getLevelColor(course.level)}`}>
+          <span className={`px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-bold backdrop-blur-sm whitespace-nowrap ${getLevelColor(course.level)}`}>
             {course.level}
           </span>
         </div>
@@ -105,8 +105,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
         {/* Enhanced progress overlay */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 md:p-4">
           <div className="flex items-center justify-between text-white text-xs md:text-sm mb-2">
-            <span className="font-medium">Прогресс</span>
-            <span className="font-bold text-cyan-400">{course.progress}%</span>
+            <span className="font-medium truncate">Прогресс</span>
+            <span className="font-bold text-cyan-400 flex-shrink-0">{course.progress}%</span>
           </div>
           <div className="w-full bg-white/20 rounded-full h-2 md:h-3 overflow-hidden">
             <div 
@@ -121,18 +121,18 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
 
       {/* Enhanced Course Info */}
       <div className="p-4 md:p-6 relative">
-        <h3 className="text-lg md:text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors duration-300 line-clamp-2">{course.title}</h3>
-        <p className="text-gray-300 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">{course.description}</p>
+        <h3 className="text-lg md:text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors duration-300 line-clamp-2 break-words">{course.title}</h3>
+        <p className="text-gray-300 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2 break-words">{course.description}</p>
         
         {/* Enhanced Stats */}
-        <div className="flex items-center justify-between text-xs md:text-sm text-gray-300 mb-4 md:mb-6">
-          <div className="flex items-center space-x-1 md:space-x-2 bg-white/5 rounded-lg px-2 py-1 md:px-3 md:py-1">
-            <Clock className="w-3 h-3 md:w-4 md:h-4 text-cyan-400" />
-            <span>{course.completedLessons}/{course.lessons} уроков</span>
+        <div className="flex items-center justify-between text-xs md:text-sm text-gray-300 mb-4 md:mb-6 gap-2">
+          <div className="flex items-center space-x-1 md:space-x-2 bg-white/5 rounded-lg px-2 py-1 md:px-3 md:py-1 min-w-0 flex-1">
+            <Clock className="w-3 h-3 md:w-4 md:h-4 text-cyan-400 flex-shrink-0" />
+            <span className="truncate">{course.completedLessons}/{course.lessons} уроков</span>
           </div>
-          <div className="flex items-center space-x-1 md:space-x-2 bg-white/5 rounded-lg px-2 py-1 md:px-3 md:py-1">
+          <div className="flex items-center space-x-1 md:space-x-2 bg-white/5 rounded-lg px-2 py-1 md:px-3 md:py-1 flex-shrink-0">
             <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-400" />
-            <span>{course.xp} XP</span>
+            <span className="whitespace-nowrap">{course.xp} XP</span>
           </div>
         </div>
 
@@ -141,15 +141,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
           {isInteractiveCourse ? (
             <>
-              <BookOpen className="w-4 h-4 md:w-5 md:h-5 relative z-10" />
-              <span className="relative z-10 hidden sm:inline">Начать изучение</span>
-              <span className="relative z-10 sm:hidden">Изучать</span>
+              <BookOpen className="w-4 h-4 md:w-5 md:h-5 relative z-10 flex-shrink-0" />
+              <span className="relative z-10 hidden sm:inline truncate">Начать изучение</span>
+              <span className="relative z-10 sm:hidden truncate">Изучать</span>
             </>
           ) : (
             <>
-              <Play className="w-4 h-4 md:w-5 md:h-5 relative z-10" />
-              <span className="relative z-10 hidden sm:inline">Продолжить изучение</span>
-              <span className="relative z-10 sm:hidden">Продолжить</span>
+              <Play className="w-4 h-4 md:w-5 md:h-5 relative z-10 flex-shrink-0" />
+              <span className="relative z-10 hidden sm:inline truncate">Продолжить изучение</span>
+              <span className="relative z-10 sm:hidden truncate">Продолжить</span>
             </>
           )}
         </button>
