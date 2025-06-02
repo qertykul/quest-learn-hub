@@ -6,6 +6,7 @@ import { CourseViewer } from './CourseViewer';
 import { Button } from '@/components/ui/button';
 import { Plus, Sparkles } from 'lucide-react';
 import { creativityGeniusCourse } from '@/data/creativityGeniusCourse';
+import { useAuth } from '@/context/AuthContext';
 
 interface Course {
   id: number;
@@ -24,6 +25,7 @@ interface Course {
 const initialCourses: Course[] = [creativityGeniusCourse];
 
 export const CourseGrid = () => {
+  const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | undefined>();
@@ -91,16 +93,20 @@ export const CourseGrid = () => {
           </h2>
           <p className="text-gray-300 text-sm md:text-base">Изучайте новое каждый день</p>
         </div>
-        <Button
-          onClick={() => setIsFormOpen(true)}
-          className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-500/25 animate-fade-in w-full sm:w-auto"
-          style={{ animationDelay: '200ms' }}
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          <span className="hidden sm:inline">Загрузить курс</span>
-          <span className="sm:hidden">Курс</span>
-          <Sparkles className="w-4 h-4 ml-2" />
-        </Button>
+        
+        {/* Show upload button only for admin */}
+        {user?.isAdmin && (
+          <Button
+            onClick={() => setIsFormOpen(true)}
+            className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-500/25 animate-fade-in w-full sm:w-auto"
+            style={{ animationDelay: '200ms' }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            <span className="hidden sm:inline">Загрузить курс</span>
+            <span className="sm:hidden">Курс</span>
+            <Sparkles className="w-4 h-4 ml-2" />
+          </Button>
+        )}
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
@@ -113,8 +119,8 @@ export const CourseGrid = () => {
           >
             <CourseCard 
               course={course} 
-              onEdit={() => openEditForm(course)}
-              onDelete={() => handleDeleteCourse(course.id)}
+              onEdit={user?.isAdmin ? () => openEditForm(course) : undefined}
+              onDelete={user?.isAdmin ? () => handleDeleteCourse(course.id) : undefined}
             />
           </div>
         ))}
@@ -124,24 +130,30 @@ export const CourseGrid = () => {
         <div className="text-center py-8 md:py-12 animate-bounce-in px-4">
           <div className="text-4xl md:text-6xl mb-4">📚</div>
           <h3 className="text-lg md:text-xl font-semibold text-white mb-2">Пока нет курсов</h3>
-          <p className="text-gray-300 mb-6 text-sm md:text-base">Загрузите свой первый курс, чтобы начать обучение!</p>
-          <Button
-            onClick={() => setIsFormOpen(true)}
-            className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Загрузить первый курс
-          </Button>
+          <p className="text-gray-300 mb-6 text-sm md:text-base">
+            {user?.isAdmin ? 'Загрузите свой первый курс, чтобы начать обучение!' : 'Скоро здесь появятся курсы!'}
+          </p>
+          {user?.isAdmin && (
+            <Button
+              onClick={() => setIsFormOpen(true)}
+              className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Загрузить первый курс
+            </Button>
+          )}
         </div>
       )}
 
-      <CourseForm
-        isOpen={isFormOpen}
-        onClose={closeForm}
-        onSave={editingCourse ? handleEditCourse : handleAddCourse}
-        course={editingCourse}
-        isEditing={!!editingCourse}
-      />
+      {user?.isAdmin && (
+        <CourseForm
+          isOpen={isFormOpen}
+          onClose={closeForm}
+          onSave={editingCourse ? handleEditCourse : handleAddCourse}
+          course={editingCourse}
+          isEditing={!!editingCourse}
+        />
+      )}
     </div>
   );
 };

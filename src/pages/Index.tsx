@@ -1,58 +1,86 @@
 
 import React, { useState } from 'react';
 import { Header } from '@/components/Header';
-import { CourseGrid } from '@/components/CourseGrid';
+import { CoursesSection } from '@/components/CoursesSection';
 import { UserProgress } from '@/components/UserProgress';
 import { AchievementBoard } from '@/components/AchievementBoard';
 import { LeaderBoard } from '@/components/LeaderBoard';
+import { AdminPanel } from '@/components/AdminPanel';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
 
-const Index = () => {
+const IndexContent = () => {
   const [activeTab, setActiveTab] = useState('courses');
+  const { isAuthenticated, user } = useAuth();
 
-  const tabs = [
-    { id: 'courses', label: '📚 Курсы', component: CourseGrid },
-    { id: 'progress', label: '📊 Прогресс', component: UserProgress },
-    { id: 'achievements', label: '🏆 Достижения', component: AchievementBoard },
-    { id: 'leaderboard', label: '👑 Рейтинг', component: LeaderBoard }
-  ];
+  const renderContent = () => {
+    if (!isAuthenticated) {
+      return (
+        <div className="text-center py-12 md:py-24 animate-bounce-in px-4">
+          <div className="text-6xl md:text-8xl mb-6">🎓</div>
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
+            Добро пожаловать в EduGame!
+          </h2>
+          <p className="text-gray-300 mb-8 text-lg md:text-xl max-w-2xl mx-auto">
+            Изучайте новое, зарабатывайте очки опыта и открывайте достижения в увлекательной игровой форме
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="text-4xl mb-4">📚</div>
+              <h3 className="text-xl font-semibold text-white mb-2">Интерактивные курсы</h3>
+              <p className="text-gray-300">Обучайтесь с помощью интерактивных уроков и практических заданий</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="text-4xl mb-4">🏆</div>
+              <h3 className="text-xl font-semibold text-white mb-2">Система достижений</h3>
+              <p className="text-gray-300">Зарабатывайте очки опыта и разблокируйте уникальные достижения</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="text-4xl mb-4">👥</div>
+              <h3 className="text-xl font-semibold text-white mb-2">Соревнования</h3>
+              <p className="text-gray-300">Соревнуйтесь с другими участниками в рейтинговой таблице</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || CourseGrid;
+    switch (activeTab) {
+      case 'courses':
+        return <CoursesSection />;
+      case 'progress':
+        return <UserProgress />;
+      case 'achievements':
+        return <AchievementBoard />;
+      case 'leaderboard':
+        return <LeaderBoard />;
+      case 'admin':
+        return user?.isAdmin ? <AdminPanel /> : <CoursesSection />;
+      default:
+        return <CoursesSection />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-      <Header />
+      <Header activeTab={activeTab} onTabChange={setActiveTab} />
       
       <div className="container mx-auto px-4 py-6 md:px-6 md:py-8">
-        {/* Enhanced Navigation Tabs */}
-        <div className="flex flex-wrap gap-2 md:gap-4 mb-6 md:mb-8 justify-center lg:justify-start">
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-2 md:px-6 md:py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 text-sm md:text-base ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg scale-105'
-                  : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20'
-              }`}
-              style={{
-                animationDelay: `${index * 100}ms`
-              }}
-            >
-              <span className="hidden sm:inline">{tab.label}</span>
-              <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Content with smooth transitions */}
         <div 
           key={activeTab}
           className="animate-fade-in-up"
         >
-          <ActiveComponent />
+          {renderContent()}
         </div>
       </div>
     </div>
+  );
+};
+
+const Index = () => {
+  return (
+    <AuthProvider>
+      <IndexContent />
+    </AuthProvider>
   );
 };
 
