@@ -1,2 +1,2 @@
 
-export { SupportBot } from './SupportBot';
+export { SupportBot } from './SupportBot/index';
