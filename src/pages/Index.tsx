@@ -6,6 +6,7 @@ import { UserProgress } from '@/components/UserProgress';
 import { AchievementBoard } from '@/components/AchievementBoard';
 import { LeaderBoard } from '@/components/LeaderBoard';
 import { AdminPanel } from '@/components/AdminPanel';
+import { SupportBot } from '@/components/SupportBot';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 
 const IndexContent = () => {
@@ -72,6 +73,9 @@ const IndexContent = () => {
           {renderContent()}
         </div>
       </div>
+
+      {/* Support Bot */}
+      <SupportBot />
     </div>
   );
 };
