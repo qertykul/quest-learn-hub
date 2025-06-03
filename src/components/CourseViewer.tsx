@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { LessonViewer } from './LessonViewer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, BookOpen, Trophy } from 'lucide-react';
+import { useProgress } from './CourseGrid';
 
 interface Lesson {
   id: number;
@@ -24,15 +25,18 @@ interface CourseViewerProps {
   courseTitle: string;
   lessons: Lesson[];
   onBack: () => void;
+  courseId: number;
 }
 
 export const CourseViewer: React.FC<CourseViewerProps> = ({
   courseTitle,
   lessons: initialLessons,
-  onBack
+  onBack,
+  courseId
 }) => {
   const [lessons, setLessons] = useState(initialLessons);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+  const { updateCourseProgress } = useProgress();
 
   const handleLessonComplete = (lessonId: number) => {
     setLessons(prevLessons =>
@@ -40,6 +44,10 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
         lesson.id === lessonId ? { ...lesson, completed: true } : lesson
       )
     );
+
+    // Update course progress
+    const completedCount = lessons.filter(l => l.completed).length + 1;
+    updateCourseProgress(courseId, completedCount);
   };
 
   const handleExerciseComplete = (lessonId: number, exerciseId: number) => {
