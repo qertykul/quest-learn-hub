@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -130,7 +129,7 @@ export const SupportBot = () => {
   // Инициализация с персонализированным приветствием
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const welcomeResponse = analyzeIntent('привет', user?.name);
+      const welcomeResponse = analyzeIntent('привет', user?.username);
       setMessages([{
         id: 1,
         text: welcomeResponse.text,
@@ -139,7 +138,7 @@ export const SupportBot = () => {
         intent: welcomeResponse.intent
       }]);
     }
-  }, [isOpen, user?.name]);
+  }, [isOpen, user?.username]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -165,7 +164,7 @@ export const SupportBot = () => {
 
     // Более реалистичная задержка ответа
     setTimeout(() => {
-      const botResponse = analyzeIntent(inputMessage, user?.name);
+      const botResponse = analyzeIntent(inputMessage, user?.username);
       const botMessage: Message = {
         id: Date.now() + 1,
         text: botResponse.text,
