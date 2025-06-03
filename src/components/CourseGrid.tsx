@@ -1,3 +1,4 @@
+
 import React, { useState, useContext, createContext, useEffect } from 'react';
 import { CourseCard } from './CourseCard';
 import { CourseForm } from './CourseForm';
@@ -14,6 +15,7 @@ interface Course {
   description: string;
   progress: number;
   author: string;
+  level: string;
   xp: number;
   badge: string;
   image: string;
@@ -42,14 +44,24 @@ export const useProgress = () => {
 // Обновляем курс творчества с автором
 const updatedCreativityCourse = {
   ...creativityGeniusCourse,
-  author: "Джулия Кэмерон"
+  author: "Джулия Кэмерон",
+  level: "Начинающий"
 };
 
 const initialCourses: Course[] = [
   updatedCreativityCourse,
-  richestManInBabylonCourse,
-  thinkAndGrowRichCourse,
-  subtleArtCourse
+  {
+    ...richestManInBabylonCourse,
+    level: "Средний"
+  },
+  {
+    ...thinkAndGrowRichCourse,
+    level: "Продвинутый"
+  },
+  {
+    ...subtleArtCourse,
+    level: "Средний"
+  }
 ];
 
 export const CourseGrid = () => {
