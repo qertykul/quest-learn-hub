@@ -1,71 +1,99 @@
 
 import React from 'react';
-import { Trophy, Award, Target, Zap, Star, Crown } from 'lucide-react';
-
-const achievements = [
-  {
-    id: 1,
-    title: 'Первые шаги',
-    description: 'Завершите свой первый урок',
-    icon: Trophy,
-    earned: true,
-    rarity: 'common',
-    points: 50,
-    date: '15.04.2024'
-  },
-  {
-    id: 2,
-    title: 'Марафонец',
-    description: 'Учитесь 7 дней подряд',
-    icon: Target,
-    earned: true,
-    rarity: 'uncommon',
-    points: 150,
-    date: '22.04.2024'
-  },
-  {
-    id: 3,
-    title: 'Мастер JavaScript',
-    description: 'Завершите курс JavaScript',
-    icon: Crown,
-    earned: true,
-    rarity: 'rare',
-    points: 500,
-    date: '28.04.2024'
-  },
-  {
-    id: 4,
-    title: 'Молния',
-    description: 'Заработайте 1000 XP за день',
-    icon: Zap,
-    earned: false,
-    rarity: 'epic',
-    points: 300,
-    date: null
-  },
-  {
-    id: 5,
-    title: 'Звезда',
-    description: 'Получите 5 звезд в одном курсе',
-    icon: Star,
-    earned: true,
-    rarity: 'rare',
-    points: 250,
-    date: '30.04.2024'
-  },
-  {
-    id: 6,
-    title: 'Легенда',
-    description: 'Достигните 20 уровня',
-    icon: Award,
-    earned: false,
-    rarity: 'legendary',
-    points: 1000,
-    date: null
-  }
-];
+import { Trophy, Award, Target, Zap, Star, Crown, BookOpen, Calendar } from 'lucide-react';
+import { useProgress } from './CourseGrid';
 
 export const AchievementBoard = () => {
+  const { getTotalXP, getCompletedCourses, getUserLevel } = useProgress();
+  
+  const totalXP = getTotalXP();
+  const completedCourses = getCompletedCourses();
+  const currentLevel = getUserLevel();
+  const streakDays = Math.min(Math.floor(totalXP / 50), 30);
+
+  const achievements = [
+    {
+      id: 1,
+      title: 'Первые шаги',
+      description: 'Завершите свой первый урок',
+      icon: Trophy,
+      earned: totalXP > 0,
+      rarity: 'common',
+      points: 50,
+      date: totalXP > 0 ? '15.04.2024' : null
+    },
+    {
+      id: 2,
+      title: 'Марафонец',
+      description: 'Учитесь 7 дней подряд',
+      icon: Target,
+      earned: streakDays >= 7,
+      rarity: 'uncommon',
+      points: 150,
+      date: streakDays >= 7 ? '22.04.2024' : null
+    },
+    {
+      id: 3,
+      title: 'Читатель',
+      description: 'Завершите первый курс',
+      icon: BookOpen,
+      earned: completedCourses >= 1,
+      rarity: 'rare',
+      points: 300,
+      date: completedCourses >= 1 ? '28.04.2024' : null
+    },
+    {
+      id: 4,
+      title: 'Молния',
+      description: 'Заработайте 1000 XP',
+      icon: Zap,
+      earned: totalXP >= 1000,
+      rarity: 'epic',
+      points: 300,
+      date: totalXP >= 1000 ? '30.04.2024' : null
+    },
+    {
+      id: 5,
+      title: 'Звезда',
+      description: 'Достигните 10 уровня',
+      icon: Star,
+      earned: currentLevel >= 10,
+      rarity: 'rare',
+      points: 250,
+      date: currentLevel >= 10 ? '05.05.2024' : null
+    },
+    {
+      id: 6,
+      title: 'Мастер',
+      description: 'Завершите 3 курса',
+      icon: Crown,
+      earned: completedCourses >= 3,
+      rarity: 'epic',
+      points: 500,
+      date: completedCourses >= 3 ? '10.05.2024' : null
+    },
+    {
+      id: 7,
+      title: 'Легенда',
+      description: 'Достигните 20 уровня',
+      icon: Award,
+      earned: currentLevel >= 20,
+      rarity: 'legendary',
+      points: 1000,
+      date: currentLevel >= 20 ? '15.05.2024' : null
+    },
+    {
+      id: 8,
+      title: 'Преданный ученик',
+      description: 'Учитесь 30 дней подряд',
+      icon: Calendar,
+      earned: streakDays >= 30,
+      rarity: 'legendary',
+      points: 800,
+      date: streakDays >= 30 ? '20.05.2024' : null
+    }
+  ];
+
   const getRarityColor = (rarity: string, earned: boolean) => {
     if (!earned) return 'bg-gray-600 border-gray-500';
     

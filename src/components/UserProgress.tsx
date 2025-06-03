@@ -2,6 +2,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Trophy, Target, TrendingUp, Calendar } from 'lucide-react';
+import { useProgress } from './CourseGrid';
 
 const weeklyData = [
   { day: 'Пн', xp: 120 },
@@ -14,14 +15,26 @@ const weeklyData = [
 ];
 
 const monthlyProgress = [
-  { month: 'Янв', courses: 2 },
-  { month: 'Фев', courses: 3 },
+  { month: 'Янв', courses: 1 },
+  { month: 'Фев', courses: 2 },
   { month: 'Мар', courses: 1 },
-  { month: 'Апр', courses: 4 },
-  { month: 'Май', courses: 2 },
+  { month: 'Апр', courses: 2 },
+  { month: 'Май', courses: 1 },
 ];
 
 export const UserProgress = () => {
+  const { getTotalXP, getCompletedCourses, getUserLevel } = useProgress();
+  
+  const totalXP = getTotalXP();
+  const currentLevel = getUserLevel();
+  const completedCourses = getCompletedCourses();
+  const xpForNextLevel = currentLevel * 200;
+  const progressToNextLevel = ((totalXP % 200) / 200) * 100;
+  const xpNeeded = xpForNextLevel - (totalXP % 200);
+
+  // Расчет streak (дней подряд) - простая симуляция
+  const streakDays = Math.min(Math.floor(totalXP / 50), 30);
+
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
@@ -30,7 +43,7 @@ export const UserProgress = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-100">Общий XP</p>
-              <p className="text-3xl font-bold">2,450</p>
+              <p className="text-3xl font-bold">{totalXP.toLocaleString()}</p>
             </div>
             <TrendingUp className="w-8 h-8" />
           </div>
@@ -40,7 +53,7 @@ export const UserProgress = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-pink-100">Текущий уровень</p>
-              <p className="text-3xl font-bold">12</p>
+              <p className="text-3xl font-bold">{currentLevel}</p>
             </div>
             <Trophy className="w-8 h-8" />
           </div>
@@ -50,7 +63,7 @@ export const UserProgress = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-100">Курсов завершено</p>
-              <p className="text-3xl font-bold">7</p>
+              <p className="text-3xl font-bold">{completedCourses}</p>
             </div>
             <Target className="w-8 h-8" />
           </div>
@@ -60,7 +73,7 @@ export const UserProgress = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-orange-100">Дней подряд</p>
-              <p className="text-3xl font-bold">15</p>
+              <p className="text-3xl font-bold">{streakDays}</p>
             </div>
             <Calendar className="w-8 h-8" />
           </div>
@@ -128,21 +141,23 @@ export const UserProgress = () => {
       <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-white">Прогресс до следующего уровня</h3>
-          <span className="text-cyan-400 font-semibold">Уровень 12 → 13</span>
+          <span className="text-cyan-400 font-semibold">Уровень {currentLevel} → {currentLevel + 1}</span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-white">2,450 XP</span>
+          <span className="text-white">{totalXP} XP</span>
           <div className="flex-1 bg-white/20 rounded-full h-4">
             <div 
               className="bg-gradient-to-r from-cyan-400 to-blue-500 h-4 rounded-full relative overflow-hidden"
-              style={{ width: '75%' }}
+              style={{ width: `${progressToNextLevel}%` }}
             >
               <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
             </div>
           </div>
-          <span className="text-white">3,000 XP</span>
+          <span className="text-white">{xpForNextLevel} XP</span>
         </div>
-        <p className="text-gray-300 text-sm mt-2">Осталось 550 XP до следующего уровня!</p>
+        <p className="text-gray-300 text-sm mt-2">
+          {xpNeeded > 0 ? `Осталось ${xpNeeded} XP до следующего уровня!` : 'Поздравляем с новым уровнем!'}
+        </p>
       </div>
     </div>
   );
