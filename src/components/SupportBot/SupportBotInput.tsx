@@ -29,7 +29,7 @@ export const SupportBotInput = ({
       {messages.length <= 2 && (
         <div className="px-4 pb-2">
           <div className="flex flex-wrap gap-1">
-            {['Помощь с курсами', 'Мой прогресс', 'Проблемы'].map((reply) => (
+            {['Помощь с курсами', 'Мой прогресс', 'Технические проблемы', 'Проблемы с входом'].map((reply) => (
               <Button
                 key={reply}
                 variant="outline"
