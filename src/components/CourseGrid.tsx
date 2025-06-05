@@ -86,36 +86,33 @@ export const CourseGrid = () => {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-6">
         <div className="animate-slide-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            Мои курсы
+          <h2 className="text-3xl font-light text-white mb-2">
+            Мои <span className="font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">курсы</span>
           </h2>
-          <p className="text-gray-300 text-sm md:text-base">Изучайте новое каждый день</p>
+          <p className="text-gray-400 font-light">Развивайте профессиональные навыки</p>
         </div>
         
-        {/* Show upload button only for admin */}
         {user?.isAdmin && (
           <Button
             onClick={() => setIsFormOpen(true)}
-            className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-500/25 animate-fade-in w-full sm:w-auto"
-            style={{ animationDelay: '200ms' }}
+            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-500/25 animate-fade-in"
           >
             <Plus className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Загрузить курс</span>
-            <span className="sm:hidden">Курс</span>
+            Добавить курс
             <Sparkles className="w-4 h-4 ml-2" />
           </Button>
         )}
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {courses.map((course, index) => (
           <div 
             key={course.id} 
             onClick={() => course.fullLessons && handleCourseView(course)}
             className="animate-fade-in-up"
-            style={{ animationDelay: `${index * 150}ms` }}
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             <CourseCard 
               course={course} 
@@ -127,19 +124,19 @@ export const CourseGrid = () => {
       </div>
 
       {courses.length === 0 && (
-        <div className="text-center py-8 md:py-12 animate-bounce-in px-4">
-          <div className="text-4xl md:text-6xl mb-4">📚</div>
-          <h3 className="text-lg md:text-xl font-semibold text-white mb-2">Пока нет курсов</h3>
-          <p className="text-gray-300 mb-6 text-sm md:text-base">
-            {user?.isAdmin ? 'Загрузите свой первый курс, чтобы начать обучение!' : 'Скоро здесь появятся курсы!'}
+        <div className="text-center py-16 animate-bounce-in">
+          <div className="text-6xl mb-6">📚</div>
+          <h3 className="text-2xl font-light text-white mb-3">Курсы не найдены</h3>
+          <p className="text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+            {user?.isAdmin ? 'Добавьте первый курс для начала обучения' : 'Скоро здесь появятся курсы'}
           </p>
           {user?.isAdmin && (
             <Button
               onClick={() => setIsFormOpen(true)}
-              className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Загрузить первый курс
+              Добавить первый курс
             </Button>
           )}
         </div>

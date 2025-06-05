@@ -17,29 +17,29 @@ const IndexContent = () => {
   const renderContent = () => {
     if (!isAuthenticated) {
       return (
-        <div className="text-center py-12 md:py-24 animate-bounce-in px-4">
-          <div className="text-6xl md:text-8xl mb-6">🎓</div>
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
-            Добро пожаловать в EduGame!
+        <div className="text-center py-16 md:py-28 animate-bounce-in px-4">
+          <div className="text-6xl md:text-8xl mb-8">📚</div>
+          <h2 className="text-3xl md:text-5xl font-light text-white mb-6 tracking-wide">
+            Добро пожаловать в <span className="font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">LearnHub Pro</span>
           </h2>
-          <p className="text-gray-300 mb-8 text-lg md:text-xl max-w-2xl mx-auto">
-            Изучайте новое, зарабатывайте очки опыта и открывайте достижения в увлекательной игровой форме
+          <p className="text-gray-300 mb-12 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light">
+            Профессиональная платформа для развития навыков и карьерного роста
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div className="text-4xl mb-4">📚</div>
-              <h3 className="text-xl font-semibold text-white mb-2">Интерактивные курсы</h3>
-              <p className="text-gray-300">Обучайтесь с помощью интерактивных уроков и практических заданий</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+              <div className="text-4xl mb-6">🎯</div>
+              <h3 className="text-xl font-medium text-white mb-3">Экспертные курсы</h3>
+              <p className="text-gray-300 leading-relaxed">Изучайте проверенные методики от ведущих экспертов</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div className="text-4xl mb-4">🏆</div>
-              <h3 className="text-xl font-semibold text-white mb-2">Система достижений</h3>
-              <p className="text-gray-300">Зарабатывайте очки опыта и разблокируйте уникальные достижения</p>
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+              <div className="text-4xl mb-6">📊</div>
+              <h3 className="text-xl font-medium text-white mb-3">Отслеживание прогресса</h3>
+              <p className="text-gray-300 leading-relaxed">Детальная аналитика вашего профессионального роста</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div className="text-4xl mb-4">👥</div>
-              <h3 className="text-xl font-semibold text-white mb-2">Соревнования</h3>
-              <p className="text-gray-300">Соревнуйтесь с другими участниками в рейтинговой таблице</p>
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+              <div className="text-4xl mb-6">🏆</div>
+              <h3 className="text-xl font-medium text-white mb-3">Сертификация</h3>
+              <p className="text-gray-300 leading-relaxed">Получайте признанные сертификаты достижений</p>
             </div>
           </div>
         </div>
@@ -63,10 +63,10 @@ const IndexContent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900">
       <Header activeTab={activeTab} onTabChange={setActiveTab} />
       
-      <div className="container mx-auto px-4 py-6 md:px-6 md:py-8">
+      <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
         <div 
           key={activeTab}
           className="animate-fade-in-up"
@@ -75,7 +75,6 @@ const IndexContent = () => {
         </div>
       </div>
 
-      {/* Support Bot */}
       <SupportBot />
     </div>
   );

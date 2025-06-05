@@ -25,6 +25,7 @@ interface ProgressContextType {
   getTotalXP: () => number;
   getCompletedCourses: () => number;
   getUserLevel: () => number;
+  resetAllProgress: () => void;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -37,38 +38,46 @@ export const useProgress = () => {
   return context;
 };
 
-// Initial courses setup
+// Initial courses setup with reset progress
 const updatedCreativityCourse = {
   ...creativityGeniusCourse,
-  author: "Джулия Кэмерон",
-  level: "Начинающий"
+  author: "Ян Ставшкевич",
+  level: "Начинающий",
+  progress: 0,
+  completedLessons: 0
 };
 
 const initialCourses: Course[] = [
   updatedCreativityCourse,
   {
     ...richestManInBabylonCourse,
-    level: "Средний"
+    level: "Средний",
+    progress: 0,
+    completedLessons: 0
   },
   {
     ...thinkAndGrowRichCourse,
-    level: "Продвинутый"
+    level: "Продвинутый",
+    progress: 0,
+    completedLessons: 0
   },
   {
     ...subtleArtCourse,
-    level: "Средний"
+    level: "Средний",
+    progress: 0,
+    completedLessons: 0
   }
 ];
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [courses, setCourses] = useState<Course[]>(() => {
-    const savedCourses = localStorage.getItem('userCourses');
+    const savedCourses = localStorage.getItem('learnhub_courses');
     return savedCourses ? JSON.parse(savedCourses) : initialCourses;
   });
 
-  // Save progress to localStorage
+  // Save progress to localStorage with new key
   useEffect(() => {
-    localStorage.setItem('userCourses', JSON.stringify(courses));
+    localStorage.setItem('learnhub_courses', JSON.stringify(courses));
   }, [courses]);
 
   const updateCourseProgress = (courseId: number, lessonsCompleted: number) => {
@@ -85,6 +94,11 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         return course;
       })
     );
+  };
+
+  const resetAllProgress = () => {
+    setCourses(initialCourses);
+    localStorage.removeItem('learnhub_courses');
   };
 
   const getTotalXP = () => {
@@ -109,7 +123,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     updateCourseProgress,
     getTotalXP,
     getCompletedCourses,
-    getUserLevel
+    getUserLevel,
+    resetAllProgress
   };
 
   return (
