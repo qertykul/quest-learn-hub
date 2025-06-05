@@ -29,7 +29,7 @@ interface UserDropdownProps {
 
 export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChange }) => {
   const { user, logout } = useAuth();
-  const { currentAvatar } = useTheme();
+  const { currentAvatar, currentTheme } = useTheme();
 
   if (!user) return null;
 
@@ -50,28 +50,40 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChan
       <DropdownMenuTrigger asChild>
         <Button 
           variant="ghost" 
-          className="relative h-10 w-10 rounded-full p-0 hover:bg-white/10"
+          className={`relative h-10 w-10 rounded-full p-0 hover:bg-white/10 transition-all duration-200 ${currentTheme.buttonHover}`}
         >
-          <Avatar className="h-10 w-10 border-2 border-white/20">
-            <AvatarImage src={currentAvatar} alt={user.username} />
-            <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-              {user.username.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <div className={`h-10 w-10 rounded-full border-2 ${currentTheme.border} flex items-center justify-center text-2xl hover:border-blue-400 transition-colors`}>
+            {currentAvatar.startsWith('data:') ? (
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={currentAvatar} alt={user.username} />
+                <AvatarFallback className={`bg-gradient-to-br ${currentTheme.primary} text-white`}>
+                  {user.username.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <span>{currentAvatar}</span>
+            )}
+          </div>
         </Button>
       </DropdownMenuTrigger>
       
       <DropdownMenuContent 
-        className="w-64 bg-black/90 backdrop-blur-xl border border-white/10 text-white z-50" 
+        className="w-64 bg-black/95 backdrop-blur-xl border border-white/10 text-white z-50" 
         align="end"
       >
         <div className="flex items-center space-x-3 p-3">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={currentAvatar} alt={user.username} />
-            <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-              {user.username.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <div className="h-12 w-12 rounded-full border-2 border-white/20 flex items-center justify-center text-2xl">
+            {currentAvatar.startsWith('data:') ? (
+              <Avatar className="h-12 w-12">
+                <AvatarImage src={currentAvatar} alt={user.username} />
+                <AvatarFallback className={`bg-gradient-to-br ${currentTheme.primary} text-white`}>
+                  {user.username.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <span>{currentAvatar}</span>
+            )}
+          </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">
               {user.username}
@@ -90,7 +102,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChan
           return (
             <DropdownMenuItem
               key={item.key}
-              className={`flex items-center space-x-3 px-3 py-2 cursor-pointer hover:bg-white/10 focus:bg-white/10 ${
+              className={`flex items-center space-x-3 px-3 py-2 cursor-pointer hover:bg-white/10 focus:bg-white/10 transition-colors ${
                 activeTab === item.key ? 'bg-blue-500/20 text-blue-300' : 'text-white'
               }`}
               onClick={() => onTabChange(item.key)}

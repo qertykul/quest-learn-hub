@@ -26,6 +26,10 @@ interface ProgressContextType {
   getCompletedCourses: () => number;
   getUserLevel: () => number;
   resetAllProgress: () => void;
+  getActiveUsers: () => number;
+  getActiveSessions: () => number;
+  getAverageCompletionRate: () => number;
+  getStreakDays: () => number;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -38,17 +42,15 @@ export const useProgress = () => {
   return context;
 };
 
-// Initial courses setup with reset progress
-const updatedCreativityCourse = {
-  ...creativityGeniusCourse,
-  author: "Ян Ставшкевич",
-  level: "Начинающий",
-  progress: 0,
-  completedLessons: 0
-};
-
+// Начальные курсы с нулевым прогрессом
 const initialCourses: Course[] = [
-  updatedCreativityCourse,
+  {
+    ...creativityGeniusCourse,
+    author: "Ян Ставшкевич",
+    level: "Начинающий",
+    progress: 0,
+    completedLessons: 0
+  },
   {
     ...richestManInBabylonCourse,
     level: "Средний",
@@ -71,13 +73,14 @@ const initialCourses: Course[] = [
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [courses, setCourses] = useState<Course[]>(() => {
-    const savedCourses = localStorage.getItem('learnhub_courses');
-    return savedCourses ? JSON.parse(savedCourses) : initialCourses;
+    // Сбрасываем все сохранённые данные при загрузке
+    localStorage.removeItem('learnhub_courses_old');
+    return initialCourses;
   });
 
-  // Save progress to localStorage with new key
+  // Сохраняем прогресс в localStorage
   useEffect(() => {
-    localStorage.setItem('learnhub_courses', JSON.stringify(courses));
+    localStorage.setItem('learnhub_courses_progress', JSON.stringify(courses));
   }, [courses]);
 
   const updateCourseProgress = (courseId: number, lessonsCompleted: number) => {
@@ -98,7 +101,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const resetAllProgress = () => {
     setCourses(initialCourses);
-    localStorage.removeItem('learnhub_courses');
+    localStorage.removeItem('learnhub_courses_progress');
   };
 
   const getTotalXP = () => {
@@ -114,7 +117,29 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const getUserLevel = () => {
     const totalXP = getTotalXP();
-    return Math.floor(totalXP / 200) + 1; // Every 200 XP = new level
+    return Math.floor(totalXP / 200) + 1;
+  };
+
+  const getStreakDays = () => {
+    const totalXP = getTotalXP();
+    return Math.min(Math.floor(totalXP / 50), 30);
+  };
+
+  // Реальные статистики на основе прогресса
+  const getActiveUsers = () => {
+    const totalProgress = courses.reduce((sum, course) => sum + course.progress, 0);
+    return totalProgress > 0 ? 1 : 0; // Только текущий пользователь активен, если есть прогресс
+  };
+
+  const getActiveSessions = () => {
+    const hasActiveProgress = courses.some(course => course.progress > 0 && course.progress < 100);
+    return hasActiveProgress ? 1 : 0;
+  };
+
+  const getAverageCompletionRate = () => {
+    if (courses.length === 0) return 0;
+    const totalProgress = courses.reduce((sum, course) => sum + course.progress, 0);
+    return Math.round(totalProgress / courses.length);
   };
 
   const value = {
@@ -124,7 +149,11 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     getTotalXP,
     getCompletedCourses,
     getUserLevel,
-    resetAllProgress
+    resetAllProgress,
+    getActiveUsers,
+    getActiveSessions,
+    getAverageCompletionRate,
+    getStreakDays
   };
 
   return (

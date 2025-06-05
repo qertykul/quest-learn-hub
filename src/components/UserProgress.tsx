@@ -3,9 +3,11 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Trophy, Target, TrendingUp, Calendar } from 'lucide-react';
 import { useProgress } from '@/context/ProgressContext';
+import { useTheme } from '@/context/ThemeContext';
 
 export const UserProgress = () => {
   const { getTotalXP, getCompletedCourses, getUserLevel, courses } = useProgress();
+  const { currentTheme } = useTheme();
   
   const totalXP = getTotalXP();
   const currentLevel = getUserLevel();
@@ -53,7 +55,7 @@ export const UserProgress = () => {
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl p-6 text-white">
+        <div className={`bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl p-6 text-white transition-all duration-200 hover:scale-105 hover:shadow-xl`}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-100">Общий XP</p>
@@ -63,7 +65,7 @@ export const UserProgress = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl p-6 text-white">
+        <div className={`bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl p-6 text-white transition-all duration-200 hover:scale-105 hover:shadow-xl`}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-pink-100">Текущий уровень</p>
@@ -73,7 +75,7 @@ export const UserProgress = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-6 text-white">
+        <div className={`bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-6 text-white transition-all duration-200 hover:scale-105 hover:shadow-xl`}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-100">Курсов завершено</p>
@@ -83,7 +85,7 @@ export const UserProgress = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl p-6 text-white">
+        <div className={`bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl p-6 text-white transition-all duration-200 hover:scale-105 hover:shadow-xl`}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-orange-100">Дней подряд</p>
@@ -97,8 +99,8 @@ export const UserProgress = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly XP Chart */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-          <h3 className="text-xl font-bold text-white mb-4">XP за неделю</h3>
+        <div className={`${currentTheme.cardBg} backdrop-blur-lg rounded-2xl p-6 border ${currentTheme.border}`}>
+          <h3 className={`text-xl font-bold ${currentTheme.foreground} mb-4`}>XP за неделю</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={weeklyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -122,15 +124,15 @@ export const UserProgress = () => {
             </BarChart>
           </ResponsiveContainer>
           {totalXP === 0 && (
-            <p className="text-gray-400 text-sm text-center mt-2">
+            <p className={`${currentTheme.muted} text-sm text-center mt-2`}>
               Начните изучать курсы, чтобы увидеть прогресс
             </p>
           )}
         </div>
 
         {/* Monthly Progress */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-          <h3 className="text-xl font-bold text-white mb-4">Завершенные курсы</h3>
+        <div className={`${currentTheme.cardBg} backdrop-blur-lg rounded-2xl p-6 border ${currentTheme.border}`}>
+          <h3 className={`text-xl font-bold ${currentTheme.foreground} mb-4`}>Завершенные курсы</h3>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={monthlyProgress}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -154,7 +156,7 @@ export const UserProgress = () => {
             </LineChart>
           </ResponsiveContainer>
           {completedCourses === 0 && (
-            <p className="text-gray-400 text-sm text-center mt-2">
+            <p className={`${currentTheme.muted} text-sm text-center mt-2`}>
               Завершите первый курс, чтобы увидеть прогресс
             </p>
           )}
@@ -162,13 +164,13 @@ export const UserProgress = () => {
       </div>
 
       {/* Level Progress */}
-      <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+      <div className={`${currentTheme.cardBg} backdrop-blur-lg rounded-2xl p-6 border ${currentTheme.border}`}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-white">Прогресс до следующего уровня</h3>
+          <h3 className={`text-xl font-bold ${currentTheme.foreground}`}>Прогресс до следующего уровня</h3>
           <span className="text-cyan-400 font-semibold">Уровень {currentLevel} → {currentLevel + 1}</span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-white">{totalXP} XP</span>
+          <span className={currentTheme.foreground}>{totalXP} XP</span>
           <div className="flex-1 bg-white/20 rounded-full h-4">
             <div 
               className="bg-gradient-to-r from-cyan-400 to-blue-500 h-4 rounded-full relative overflow-hidden transition-all duration-300"
@@ -177,9 +179,9 @@ export const UserProgress = () => {
               <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
             </div>
           </div>
-          <span className="text-white">{xpForNextLevel} XP</span>
+          <span className={currentTheme.foreground}>{xpForNextLevel} XP</span>
         </div>
-        <p className="text-gray-300 text-sm mt-2">
+        <p className={`${currentTheme.muted} text-sm mt-2`}>
           {xpNeeded > 0 ? `Осталось ${xpNeeded} XP до следующего уровня!` : 'Поздравляем с новым уровнем!'}
         </p>
       </div>

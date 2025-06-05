@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Upload, Palette, User, Check } from 'lucide-react';
-import { useTheme, themes, avatarLibrary } from '@/context/ThemeContext';
+import { useTheme, themes, emojiAvatars } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
 
 export const ProfileSettings = () => {
@@ -29,50 +29,59 @@ export const ProfileSettings = () => {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-3xl font-light text-white mb-2">
-          Настройки <span className="font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">профиля</span>
+        <h2 className={`text-3xl font-light ${currentTheme.foreground} mb-2`}>
+          Настройки <span className={`font-bold bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent`}>профиля</span>
         </h2>
-        <p className="text-gray-400">Персонализируйте свой опыт обучения</p>
+        <p className={currentTheme.muted}>Персонализируйте свой опыт обучения</p>
       </div>
 
       {/* Avatar Settings */}
-      <Card className="bg-white/5 border-white/10">
+      <Card className={`${currentTheme.cardBg} backdrop-blur-lg ${currentTheme.border}`}>
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+          <CardTitle className={`${currentTheme.foreground} flex items-center gap-2`}>
             <User className="w-5 h-5" />
             Аватар профиля
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center space-x-4">
-            <Avatar className="w-20 h-20">
-              <AvatarImage src={currentAvatar} />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xl">
-                {user?.username?.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl ${currentTheme.cardBg} border-2 ${currentTheme.border}`}>
+              {currentAvatar.startsWith('data:') ? (
+                <Avatar className="w-20 h-20">
+                  <AvatarImage src={currentAvatar} />
+                  <AvatarFallback className={`bg-gradient-to-br ${currentTheme.primary} text-white text-xl`}>
+                    {user?.username?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <span>{currentAvatar}</span>
+              )}
+            </div>
             <div>
-              <h4 className="text-white font-medium">{user?.username}</h4>
-              <p className="text-gray-400 text-sm">Текущий аватар</p>
+              <h4 className={`${currentTheme.foreground} font-medium`}>{user?.username}</h4>
+              <p className={`${currentTheme.muted} text-sm`}>Текущий аватар</p>
             </div>
           </div>
 
-          {/* Avatar Library */}
+          {/* Emoji Avatar Library */}
           <div>
-            <h4 className="text-white font-medium mb-3">Выберите из библиотеки</h4>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-              {avatarLibrary.map((avatar) => (
+            <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Выберите эмодзи аватар</h4>
+            <div className="grid grid-cols-5 md:grid-cols-8 gap-3">
+              {emojiAvatars.map((avatar) => (
                 <div
                   key={avatar.id}
-                  className={`relative cursor-pointer group ${
-                    currentAvatar === avatar.src ? 'ring-2 ring-blue-400' : ''
+                  className={`relative cursor-pointer group transition-all duration-200 ${
+                    currentAvatar === avatar.emoji ? `ring-2 ring-offset-2 ring-offset-transparent` : ''
                   }`}
-                  onClick={() => setAvatar(avatar.src)}
+                  onClick={() => setAvatar(avatar.emoji)}
+                  style={{
+                    ringColor: currentAvatar === avatar.emoji ? 'rgb(59 130 246)' : 'transparent'
+                  }}
                 >
-                  <Avatar className="w-12 h-12 transition-transform group-hover:scale-110">
-                    <AvatarImage src={avatar.src} />
-                  </Avatar>
-                  {currentAvatar === avatar.src && (
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-transform group-hover:scale-110 ${currentTheme.cardBg} border ${currentTheme.border} hover:border-blue-400`}>
+                    {avatar.emoji}
+                  </div>
+                  {currentAvatar === avatar.emoji && (
                     <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
                       <Check className="w-3 h-3 text-white" />
                     </div>
@@ -84,7 +93,7 @@ export const ProfileSettings = () => {
 
           {/* Upload Custom Avatar */}
           <div>
-            <h4 className="text-white font-medium mb-3">Загрузить свой аватар</h4>
+            <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Загрузить свой аватар</h4>
             <label className="cursor-pointer">
               <input
                 type="file"
@@ -94,7 +103,7 @@ export const ProfileSettings = () => {
               />
               <Button
                 variant="outline"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/20 transition-all duration-200 ${currentTheme.buttonHover}`}
                 disabled={isUploadingAvatar}
               >
                 <Upload className="w-4 h-4 mr-2" />
@@ -106,33 +115,33 @@ export const ProfileSettings = () => {
       </Card>
 
       {/* Theme Settings */}
-      <Card className="bg-white/5 border-white/10">
+      <Card className={`${currentTheme.cardBg} backdrop-blur-lg ${currentTheme.border}`}>
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+          <CardTitle className={`${currentTheme.foreground} flex items-center gap-2`}>
             <Palette className="w-5 h-5" />
             Тема интерфейса
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {themes.map((theme) => (
               <div
                 key={theme.id}
-                className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
+                className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 hover:scale-105 ${
                   currentTheme.id === theme.id 
-                    ? 'border-blue-400 ring-2 ring-blue-400/20' 
-                    : 'border-white/10 hover:border-white/20'
+                    ? 'border-blue-400 ring-2 ring-blue-400/20 shadow-lg' 
+                    : `${currentTheme.border} hover:border-blue-300`
                 }`}
                 onClick={() => setTheme(theme.id)}
               >
-                <div className={`w-full h-20 rounded-lg bg-gradient-to-br ${theme.background} mb-3`}>
+                <div className={`w-full h-20 rounded-lg bg-gradient-to-br ${theme.background} mb-3 border ${theme.border}`}>
                   <div className="p-2 space-y-2">
                     <div className={`w-8 h-2 rounded bg-gradient-to-r ${theme.primary}`}></div>
                     <div className={`w-6 h-2 rounded bg-gradient-to-r ${theme.accent}`}></div>
                     <div className={`w-10 h-2 rounded bg-gradient-to-r ${theme.secondary}`}></div>
                   </div>
                 </div>
-                <h4 className="text-white font-medium text-sm">{theme.name}</h4>
+                <h4 className={`${currentTheme.foreground} font-medium text-sm`}>{theme.name}</h4>
                 {currentTheme.id === theme.id && (
                   <div className="absolute top-2 right-2 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
                     <Check className="w-3 h-3 text-white" />
