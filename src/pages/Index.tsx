@@ -8,6 +8,7 @@ import { LeaderBoard } from '@/components/LeaderBoard';
 import { AdminPanel } from '@/components/AdminPanel';
 import { SupportBot } from '@/components/SupportBot';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { ProgressProvider } from '@/context/ProgressContext';
 
 const IndexContent = () => {
   const [activeTab, setActiveTab] = useState('courses');
@@ -83,7 +84,9 @@ const IndexContent = () => {
 const Index = () => {
   return (
     <AuthProvider>
-      <IndexContent />
+      <ProgressProvider>
+        <IndexContent />
+      </ProgressProvider>
     </AuthProvider>
   );
 };

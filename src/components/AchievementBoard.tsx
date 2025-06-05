@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Trophy, Award, Target, Zap, Star, Crown, BookOpen, Calendar } from 'lucide-react';
-import { useProgress } from './CourseGrid';
+import { useProgress } from '@/context/ProgressContext';
 
 export const AchievementBoard = () => {
   const { getTotalXP, getCompletedCourses, getUserLevel } = useProgress();

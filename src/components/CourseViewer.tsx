@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { LessonViewer } from './LessonViewer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, BookOpen, Trophy } from 'lucide-react';
-import { useProgress } from './CourseGrid';
+import { useProgress } from '@/context/ProgressContext';
 
 interface Lesson {
   id: number;

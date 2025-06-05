@@ -2,7 +2,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Trophy, Target, TrendingUp, Calendar } from 'lucide-react';
-import { useProgress } from './CourseGrid';
+import { useProgress } from '@/context/ProgressContext';
 
 const weeklyData = [
   { day: 'Пн', xp: 120 },
@@ -32,7 +32,7 @@ export const UserProgress = () => {
   const progressToNextLevel = ((totalXP % 200) / 200) * 100;
   const xpNeeded = xpForNextLevel - (totalXP % 200);
 
-  // Расчет streak (дней подряд) - простая симуляция
+  // Calculate streak (consecutive days) - simple simulation
   const streakDays = Math.min(Math.floor(totalXP / 50), 30);
 
   return (
