@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +10,7 @@ export const AdminPanel = () => {
     totalUsers: 0,
     totalCourses: courses.length,
     activeSessions: 0,
-    completionRate: 0
+    completionRate: courses.length > 0 ? Math.round((courses.filter(c => c.progress === 100).length / courses.length) * 100) : 0
   });
 
   const [users] = useState([
@@ -51,6 +50,11 @@ export const AdminPanel = () => {
     }
   };
 
+  const handleAddCourse = () => {
+    // Логика добавления нового курса
+    alert('Функция добавления курса будет реализована в следующей версии');
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
@@ -61,6 +65,10 @@ export const AdminPanel = () => {
           <p className="text-gray-400">Управление платформой LearnHub Pro</p>
         </div>
         <div className="flex space-x-3">
+          <Button onClick={handleAddCourse} className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
+            <Plus className="w-4 h-4 mr-2" />
+            Добавить курс
+          </Button>
           <Button onClick={handleExportData} variant="outline" className="bg-white/5 border-white/10 text-white hover:bg-white/10">
             <Download className="w-4 h-4 mr-2" />
             Экспорт данных
@@ -213,13 +221,7 @@ export const AdminPanel = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 h-auto p-4 flex-col">
-              <Plus className="w-6 h-6 mb-2" />
-              <span className="font-medium">Добавить курс</span>
-              <span className="text-xs opacity-80">Создать новый курс</span>
-            </Button>
-            
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Button variant="outline" className="bg-white/5 border-white/10 text-white hover:bg-white/10 h-auto p-4 flex-col">
               <Upload className="w-6 h-6 mb-2" />
               <span className="font-medium">Импорт данных</span>

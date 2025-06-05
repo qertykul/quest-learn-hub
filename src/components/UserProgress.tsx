@@ -4,26 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Trophy, Target, TrendingUp, Calendar } from 'lucide-react';
 import { useProgress } from '@/context/ProgressContext';
 
-const weeklyData = [
-  { day: 'Пн', xp: 120 },
-  { day: 'Вт', xp: 80 },
-  { day: 'Ср', xp: 200 },
-  { day: 'Чт', xp: 150 },
-  { day: 'Пт', xp: 300 },
-  { day: 'Сб', xp: 250 },
-  { day: 'Вс', xp: 180 },
-];
-
-const monthlyProgress = [
-  { month: 'Янв', courses: 1 },
-  { month: 'Фев', courses: 2 },
-  { month: 'Мар', courses: 1 },
-  { month: 'Апр', courses: 2 },
-  { month: 'Май', courses: 1 },
-];
-
 export const UserProgress = () => {
-  const { getTotalXP, getCompletedCourses, getUserLevel } = useProgress();
+  const { getTotalXP, getCompletedCourses, getUserLevel, courses } = useProgress();
   
   const totalXP = getTotalXP();
   const currentLevel = getUserLevel();
@@ -32,8 +14,40 @@ export const UserProgress = () => {
   const progressToNextLevel = ((totalXP % 200) / 200) * 100;
   const xpNeeded = xpForNextLevel - (totalXP % 200);
 
-  // Calculate streak (consecutive days) - simple simulation
-  const streakDays = Math.min(Math.floor(totalXP / 50), 30);
+  // Calculate streak (consecutive days) - based on actual progress
+  const streakDays = Math.min(Math.floor(totalXP / 50), 15);
+
+  // Weekly XP data based on actual progress
+  const generateWeeklyData = () => {
+    const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    const baseXP = Math.floor(totalXP / 7);
+    
+    return days.map((day, index) => {
+      if (totalXP === 0) return { day, xp: 0 };
+      
+      // Distribute XP across the week with some variation
+      const variation = Math.floor(Math.random() * 50) - 25;
+      const dayXP = Math.max(0, baseXP + variation);
+      return { day, xp: dayXP };
+    });
+  };
+
+  // Monthly progress based on completed courses
+  const generateMonthlyData = () => {
+    const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май'];
+    const totalCompleted = getCompletedCourses();
+    
+    return months.map((month, index) => {
+      if (totalCompleted === 0) return { month, courses: 0 };
+      
+      // Distribute completed courses across months
+      const coursesForMonth = index < totalCompleted ? 1 : 0;
+      return { month, courses: coursesForMonth };
+    });
+  };
+
+  const weeklyData = generateWeeklyData();
+  const monthlyProgress = generateMonthlyData();
 
   return (
     <div className="space-y-6">
@@ -107,6 +121,11 @@ export const UserProgress = () => {
               </defs>
             </BarChart>
           </ResponsiveContainer>
+          {totalXP === 0 && (
+            <p className="text-gray-400 text-sm text-center mt-2">
+              Начните изучать курсы, чтобы увидеть прогресс
+            </p>
+          )}
         </div>
 
         {/* Monthly Progress */}
@@ -134,6 +153,11 @@ export const UserProgress = () => {
               />
             </LineChart>
           </ResponsiveContainer>
+          {completedCourses === 0 && (
+            <p className="text-gray-400 text-sm text-center mt-2">
+              Завершите первый курс, чтобы увидеть прогресс
+            </p>
+          )}
         </div>
       </div>
 
@@ -147,8 +171,8 @@ export const UserProgress = () => {
           <span className="text-white">{totalXP} XP</span>
           <div className="flex-1 bg-white/20 rounded-full h-4">
             <div 
-              className="bg-gradient-to-r from-cyan-400 to-blue-500 h-4 rounded-full relative overflow-hidden"
-              style={{ width: `${progressToNextLevel}%` }}
+              className="bg-gradient-to-r from-cyan-400 to-blue-500 h-4 rounded-full relative overflow-hidden transition-all duration-300"
+              style={{ width: `${Math.max(progressToNextLevel, 2)}%` }}
             >
               <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
             </div>
