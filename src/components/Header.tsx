@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Star, Trophy, Zap, Crown, LogIn } from 'lucide-react';
+import { Star, Trophy, Zap, Crown, LogIn, Target, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
+import { useProgress } from '@/context/ProgressContext';
 import { AuthModal } from './AuthModal';
 import { UserDropdown } from './UserDropdown';
 
@@ -15,6 +16,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
   const { user, login, register, isAuthenticated } = useAuth();
   const { currentTheme } = useTheme();
+  const { getTotalXP, getCompletedCourses, getUserLevel, getStreakDays } = useProgress();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleLogin = async (username: string, password: string) => {
@@ -43,31 +45,36 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
                 </div>
                 <div className="hidden sm:block min-w-0">
                   <h1 className={`text-2xl md:text-3xl font-light bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent tracking-wide`}>
-                    LearnHub <span className="font-bold">Pro</span>
+                    LearnHub
                   </h1>
                   <p className={`text-sm ${currentTheme.muted} font-light`}>Профессиональное обучение</p>
                 </div>
               </div>
 
               {isAuthenticated && user && (
-                <div className="hidden lg:flex items-center space-x-4 ml-8">
-                  <div className={`flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-4 py-2 border ${currentTheme.border}`}>
+                <div className="hidden lg:flex items-center space-x-3 ml-8">
+                  <div className={`flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-3 py-2 border ${currentTheme.border}`}>
                     <Zap className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                    <span className="text-white font-medium text-sm whitespace-nowrap">{user.xp.toLocaleString()}</span>
+                    <span className="text-white font-medium text-sm whitespace-nowrap">{getTotalXP()}</span>
                   </div>
                   
-                  <div className={`flex items-center space-x-2 bg-purple-500/10 backdrop-blur-sm rounded-xl px-4 py-2 border ${currentTheme.border}`}>
+                  <div className={`flex items-center space-x-2 bg-purple-500/10 backdrop-blur-sm rounded-xl px-3 py-2 border ${currentTheme.border}`}>
                     <Star className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                    <span className="text-white font-medium text-sm whitespace-nowrap">Ур. {user.level}</span>
+                    <span className="text-white font-medium text-sm whitespace-nowrap">Ур. {getUserLevel()}</span>
                   </div>
                   
-                  <div className={`flex items-center space-x-2 bg-amber-500/10 backdrop-blur-sm rounded-xl px-4 py-2 border ${currentTheme.border}`}>
-                    <Trophy className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                    <span className="text-white font-medium text-sm whitespace-nowrap">{user.achievements}</span>
+                  <div className={`flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-xl px-3 py-2 border ${currentTheme.border}`}>
+                    <Trophy className="w-4 h-4 text-green-400 flex-shrink-0" />
+                    <span className="text-white font-medium text-sm whitespace-nowrap">{getCompletedCourses()}</span>
+                  </div>
+
+                  <div className={`flex items-center space-x-2 bg-orange-500/10 backdrop-blur-sm rounded-xl px-3 py-2 border ${currentTheme.border}`}>
+                    <Calendar className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                    <span className="text-white font-medium text-sm whitespace-nowrap">{getStreakDays()}</span>
                   </div>
 
                   {user.isAdmin && (
-                    <div className={`flex items-center space-x-2 bg-red-500/10 backdrop-blur-sm rounded-xl px-4 py-2 border ${currentTheme.border}`}>
+                    <div className={`flex items-center space-x-2 bg-red-500/10 backdrop-blur-sm rounded-xl px-3 py-2 border ${currentTheme.border}`}>
                       <Crown className="w-4 h-4 text-red-400 flex-shrink-0" />
                       <span className="text-white font-medium text-sm whitespace-nowrap">Админ</span>
                     </div>

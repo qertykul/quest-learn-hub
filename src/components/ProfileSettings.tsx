@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Upload, Palette, User, Check } from 'lucide-react';
-import { useTheme, themes, emojiAvatars } from '@/context/ThemeContext';
+import { useTheme, themes } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
 
 export const ProfileSettings = () => {
@@ -24,6 +24,10 @@ export const ProfileSettings = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleUseInitials = () => {
+    setAvatar('');
   };
 
   return (
@@ -46,7 +50,7 @@ export const ProfileSettings = () => {
         <CardContent className="space-y-6">
           <div className="flex items-center space-x-4">
             <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl ${currentTheme.cardBg} border-2 ${currentTheme.border}`}>
-              {currentAvatar.startsWith('data:') ? (
+              {currentAvatar && currentAvatar.startsWith('data:') ? (
                 <Avatar className="w-20 h-20">
                   <AvatarImage src={currentAvatar} />
                   <AvatarFallback className={`bg-gradient-to-br ${currentTheme.primary} text-white text-xl`}>
@@ -54,7 +58,9 @@ export const ProfileSettings = () => {
                   </AvatarFallback>
                 </Avatar>
               ) : (
-                <span>{currentAvatar}</span>
+                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${currentTheme.primary} text-white text-2xl flex items-center justify-center font-bold`}>
+                  {user?.username?.charAt(0).toUpperCase()}
+                </div>
               )}
             </div>
             <div>
@@ -63,50 +69,43 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Emoji Avatar Library */}
-          <div>
-            <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Выберите эмодзи аватар</h4>
-            <div className="grid grid-cols-5 md:grid-cols-8 gap-3">
-              {emojiAvatars.map((avatar) => (
-                <div
-                  key={avatar.id}
-                  className={`relative cursor-pointer group transition-all duration-200 ${
-                    currentAvatar === avatar.emoji ? 'ring-2 ring-blue-400 ring-offset-2 ring-offset-transparent' : ''
-                  }`}
-                  onClick={() => setAvatar(avatar.emoji)}
-                >
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-transform group-hover:scale-110 ${currentTheme.cardBg} border ${currentTheme.border} hover:border-blue-400`}>
-                    {avatar.emoji}
-                  </div>
-                  {currentAvatar === avatar.emoji && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Upload Custom Avatar */}
-          <div>
-            <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Загрузить свой аватар</h4>
-            <label className="cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarUpload}
-                className="hidden"
-              />
+          {/* Avatar Options */}
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-3">
               <Button
                 variant="outline"
-                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/20 transition-all duration-200 ${currentTheme.buttonHover}`}
-                disabled={isUploadingAvatar}
+                onClick={handleUseInitials}
+                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/20 transition-all duration-200 ${
+                  !currentAvatar || !currentAvatar.startsWith('data:') ? 'ring-2 ring-blue-400' : ''
+                }`}
               >
-                <Upload className="w-4 h-4 mr-2" />
-                {isUploadingAvatar ? 'Загружается...' : 'Загрузить файл'}
+                Использовать инициалы
+                {(!currentAvatar || !currentAvatar.startsWith('data:')) && (
+                  <Check className="w-4 h-4 ml-2 text-blue-400" />
+                )}
               </Button>
-            </label>
+            </div>
+
+            {/* Upload Custom Avatar */}
+            <div>
+              <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Загрузить свой аватар</h4>
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                />
+                <Button
+                  variant="outline"
+                  className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/20 transition-all duration-200 ${currentTheme.buttonHover}`}
+                  disabled={isUploadingAvatar}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {isUploadingAvatar ? 'Загружается...' : 'Загрузить файл'}
+                </Button>
+              </label>
+            </div>
           </div>
         </CardContent>
       </Card>

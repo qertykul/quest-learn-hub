@@ -42,43 +42,45 @@ export const useProgress = () => {
   return context;
 };
 
-// Начальные курсы с нулевым прогрессом
+// Курсы с обложками книг
 const initialCourses: Course[] = [
   {
     ...creativityGeniusCourse,
     author: "Ян Ставшкевич",
     level: "Начинающий",
     progress: 0,
-    completedLessons: 0
+    completedLessons: 0,
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop"
   },
   {
     ...richestManInBabylonCourse,
     level: "Средний",
     progress: 0,
-    completedLessons: 0
+    completedLessons: 0,
+    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&h=600&fit=crop"
   },
   {
     ...thinkAndGrowRichCourse,
     level: "Продвинутый",
     progress: 0,
-    completedLessons: 0
+    completedLessons: 0,
+    image: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=400&h=600&fit=crop"
   },
   {
     ...subtleArtCourse,
     level: "Средний",
     progress: 0,
-    completedLessons: 0
+    completedLessons: 0,
+    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop"
   }
 ];
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [courses, setCourses] = useState<Course[]>(() => {
-    // Сбрасываем все сохранённые данные при загрузке
     localStorage.removeItem('learnhub_courses_old');
     return initialCourses;
   });
 
-  // Сохраняем прогресс в localStorage
   useEffect(() => {
     localStorage.setItem('learnhub_courses_progress', JSON.stringify(courses));
   }, [courses]);
@@ -125,10 +127,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return Math.min(Math.floor(totalXP / 50), 30);
   };
 
-  // Реальные статистики на основе прогресса
+  // Все статистики привязаны к реальному прогрессу
   const getActiveUsers = () => {
     const totalProgress = courses.reduce((sum, course) => sum + course.progress, 0);
-    return totalProgress > 0 ? 1 : 0; // Только текущий пользователь активен, если есть прогресс
+    return totalProgress > 0 ? 1 : 0;
   };
 
   const getActiveSessions = () => {

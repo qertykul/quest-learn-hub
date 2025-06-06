@@ -69,19 +69,6 @@ export const themes: Theme[] = [
     cardBg: 'bg-blue-900/30'
   },
   {
-    id: 'sunset',
-    name: 'Закатная',
-    primary: 'from-orange-500 to-red-600',
-    secondary: 'from-amber-600 to-orange-700',
-    accent: 'from-yellow-400 to-orange-500',
-    background: 'from-red-900 via-orange-900 to-yellow-900',
-    foreground: 'text-white',
-    muted: 'text-orange-100',
-    border: 'border-orange-400/20',
-    buttonHover: 'hover:from-orange-600 hover:to-red-700 hover:shadow-orange-500/50 hover:shadow-lg hover:scale-105',
-    cardBg: 'bg-orange-900/30'
-  },
-  {
     id: 'forest',
     name: 'Лесная',
     primary: 'from-green-500 to-emerald-600',
@@ -122,24 +109,6 @@ export const themes: Theme[] = [
   }
 ];
 
-export const emojiAvatars = [
-  { id: 'emoji1', emoji: '👨‍💼', name: 'Бизнесмен' },
-  { id: 'emoji2', emoji: '👩‍💻', name: 'Программистка' },
-  { id: 'emoji3', emoji: '👨‍🎓', name: 'Студент' },
-  { id: 'emoji4', emoji: '👩‍🏫', name: 'Учительница' },
-  { id: 'emoji5', emoji: '👨‍🔬', name: 'Учёный' },
-  { id: 'emoji6', emoji: '👩‍🎨', name: 'Художница' },
-  { id: 'emoji7', emoji: '👨‍⚕️', name: 'Врач' },
-  { id: 'emoji8', emoji: '👩‍🚀', name: 'Космонавтка' },
-  { id: 'emoji9', emoji: '👨‍🏭', name: 'Инженер' },
-  { id: 'emoji10', emoji: '👩‍💼', name: 'Менеджерка' },
-  { id: 'emoji11', emoji: '🧙‍♂️', name: 'Мудрец' },
-  { id: 'emoji12', emoji: '🧙‍♀️', name: 'Волшебница' },
-  { id: 'emoji13', emoji: '🤖', name: 'Робот' },
-  { id: 'emoji14', emoji: '🦄', name: 'Единорог' },
-  { id: 'emoji15', emoji: '🐱‍💻', name: 'Кот-программист' }
-];
-
 interface ThemeContextType {
   currentTheme: Theme;
   setTheme: (themeId: string) => void;
@@ -164,7 +133,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [currentAvatar, setCurrentAvatar] = useState<string>(() => {
-    return localStorage.getItem('learnhub_avatar') || emojiAvatars[0].emoji;
+    return localStorage.getItem('learnhub_avatar') || '';
   });
 
   const setTheme = (themeId: string) => {
