@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Upload, Palette, User, Check } from 'lucide-react';
+import { Upload, Palette, User } from 'lucide-react';
 import { useTheme, themes } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
 
@@ -24,10 +24,6 @@ export const ProfileSettings = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleUseInitials = () => {
-    setAvatar('');
   };
 
   return (
@@ -65,47 +61,31 @@ export const ProfileSettings = () => {
             </div>
             <div>
               <h4 className={`${currentTheme.foreground} font-medium`}>{user?.username}</h4>
-              <p className={`${currentTheme.muted} text-sm`}>Текущий аватар</p>
+              <p className={`${currentTheme.muted} text-sm`}>
+                {currentAvatar && currentAvatar.startsWith('data:') ? 'Пользовательский аватар' : 'Аватар с инициалами'}
+              </p>
             </div>
           </div>
 
-          {/* Avatar Options */}
-          <div className="space-y-4">
-            <div className="flex flex-wrap gap-3">
+          {/* Upload Custom Avatar */}
+          <div>
+            <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Загрузить свой аватар</h4>
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className="hidden"
+              />
               <Button
                 variant="outline"
-                onClick={handleUseInitials}
-                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/20 transition-all duration-200 ${
-                  !currentAvatar || !currentAvatar.startsWith('data:') ? 'ring-2 ring-blue-400' : ''
-                }`}
+                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/20 transition-all duration-200 ${currentTheme.buttonHover}`}
+                disabled={isUploadingAvatar}
               >
-                Использовать инициалы
-                {(!currentAvatar || !currentAvatar.startsWith('data:')) && (
-                  <Check className="w-4 h-4 ml-2 text-blue-400" />
-                )}
+                <Upload className="w-4 h-4 mr-2" />
+                {isUploadingAvatar ? 'Загружается...' : 'Загрузить файл'}
               </Button>
-            </div>
-
-            {/* Upload Custom Avatar */}
-            <div>
-              <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Загрузить свой аватар</h4>
-              <label className="cursor-pointer">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
-                <Button
-                  variant="outline"
-                  className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/20 transition-all duration-200 ${currentTheme.buttonHover}`}
-                  disabled={isUploadingAvatar}
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  {isUploadingAvatar ? 'Загружается...' : 'Загрузить файл'}
-                </Button>
-              </label>
-            </div>
+            </label>
           </div>
         </CardContent>
       </Card>
@@ -125,7 +105,7 @@ export const ProfileSettings = () => {
                 key={theme.id}
                 className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 hover:scale-105 ${
                   currentTheme.id === theme.id 
-                    ? 'border-blue-400 ring-2 ring-blue-400/20 shadow-lg' 
+                    ? 'border-blue-400 shadow-lg shadow-blue-400/25' 
                     : `${currentTheme.border} hover:border-blue-300`
                 }`}
                 onClick={() => setTheme(theme.id)}
@@ -138,11 +118,6 @@ export const ProfileSettings = () => {
                   </div>
                 </div>
                 <h4 className={`${currentTheme.foreground} font-medium text-sm`}>{theme.name}</h4>
-                {currentTheme.id === theme.id && (
-                  <div className="absolute top-2 right-2 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" />
-                  </div>
-                )}
               </div>
             ))}
           </div>

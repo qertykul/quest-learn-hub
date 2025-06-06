@@ -42,7 +42,7 @@ export const useProgress = () => {
   return context;
 };
 
-// Курсы с обложками книг
+// Курсы с реальными обложками книг
 const initialCourses: Course[] = [
   {
     ...creativityGeniusCourse,
@@ -50,34 +50,41 @@ const initialCourses: Course[] = [
     level: "Начинающий",
     progress: 0,
     completedLessons: 0,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop" // книга с текстом
   },
   {
     ...richestManInBabylonCourse,
     level: "Средний",
     progress: 0,
     completedLessons: 0,
-    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop" // книга о финансах
   },
   {
     ...thinkAndGrowRichCourse,
     level: "Продвинутый",
     progress: 0,
     completedLessons: 0,
-    image: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop" // бизнес книга
   },
   {
     ...subtleArtCourse,
     level: "Средний",
     progress: 0,
     completedLessons: 0,
-    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop" // книга по психологии
   }
 ];
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [courses, setCourses] = useState<Course[]>(() => {
-    localStorage.removeItem('learnhub_courses_old');
+    const savedCourses = localStorage.getItem('learnhub_courses_progress');
+    if (savedCourses) {
+      try {
+        return JSON.parse(savedCourses);
+      } catch {
+        return initialCourses;
+      }
+    }
     return initialCourses;
   });
 
@@ -127,10 +134,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return Math.min(Math.floor(totalXP / 50), 30);
   };
 
-  // Все статистики привязаны к реальному прогрессу
+  // Реальная статистика на основе фактического прогресса
   const getActiveUsers = () => {
-    const totalProgress = courses.reduce((sum, course) => sum + course.progress, 0);
-    return totalProgress > 0 ? 1 : 0;
+    const hasAnyProgress = courses.some(course => course.progress > 0);
+    return hasAnyProgress ? 1 : 0;
   };
 
   const getActiveSessions = () => {
