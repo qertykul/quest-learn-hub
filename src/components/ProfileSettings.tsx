@@ -71,12 +71,9 @@ export const ProfileSettings = () => {
                 <div
                   key={avatar.id}
                   className={`relative cursor-pointer group transition-all duration-200 ${
-                    currentAvatar === avatar.emoji ? `ring-2 ring-offset-2 ring-offset-transparent` : ''
+                    currentAvatar === avatar.emoji ? 'ring-2 ring-blue-400 ring-offset-2 ring-offset-transparent' : ''
                   }`}
                   onClick={() => setAvatar(avatar.emoji)}
-                  style={{
-                    ringColor: currentAvatar === avatar.emoji ? 'rgb(59 130 246)' : 'transparent'
-                  }}
                 >
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-transform group-hover:scale-110 ${currentTheme.cardBg} border ${currentTheme.border} hover:border-blue-400`}>
                     {avatar.emoji}

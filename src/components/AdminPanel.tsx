@@ -84,7 +84,7 @@ export const AdminPanel = () => {
         </div>
       </div>
 
-      <AdminStats stats={stats} />
+      <AdminStats />
       <CourseManagement courses={courses} onDeleteCourse={handleDeleteCourse} />
       <UserAnalytics users={users} />
       <PlatformSettings />
