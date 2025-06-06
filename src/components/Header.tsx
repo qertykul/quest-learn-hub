@@ -7,6 +7,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { useProgress } from '@/context/ProgressContext';
 import { AuthModal } from './AuthModal';
 import { UserDropdown } from './UserDropdown';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface HeaderProps {
   activeTab: string;
@@ -15,7 +16,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
   const { user, login, register, isAuthenticated } = useAuth();
-  const { currentTheme } = useTheme();
+  const { currentTheme, currentAvatar } = useTheme();
   const { getTotalXP, getCompletedCourses, getUserLevel, getStreakDays } = useProgress();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
@@ -38,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
       <header className="bg-black/10 backdrop-blur-xl border-b border-white/5 relative overflow-hidden">
         <div className="container mx-auto px-4 py-4 md:px-6 md:py-6 relative z-10">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6 animate-slide-in min-w-0">
+            <div className="flex items-center space-x-6 animate-slide-in min-w-0 flex-shrink-0">
               <div className="flex items-center space-x-3 md:space-x-4">
                 <div className={`w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br ${currentTheme.primary} rounded-2xl flex items-center justify-center transform hover:scale-110 transition-all duration-300 shadow-lg flex-shrink-0`}>
                   <span className="text-white font-bold text-xl md:text-2xl">L</span>
@@ -49,46 +50,68 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
                   </h1>
                 </div>
               </div>
-
-              {isAuthenticated && user && (
-                <div className="hidden lg:flex items-center justify-center flex-1 space-x-4 mx-8">
-                  <div className={`flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0`}>
-                    <Zap className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                    <span className="text-white font-medium text-sm whitespace-nowrap">{getTotalXP()}</span>
-                  </div>
-                  
-                  <div className={`flex items-center space-x-2 bg-purple-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0`}>
-                    <Star className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                    <span className="text-white font-medium text-sm whitespace-nowrap">Ур. {getUserLevel()}</span>
-                  </div>
-                  
-                  <div className={`flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0`}>
-                    <Trophy className="w-4 h-4 text-green-400 flex-shrink-0" />
-                    <span className="text-white font-medium text-sm whitespace-nowrap">{getCompletedCourses()}</span>
-                  </div>
-
-                  <div className={`flex items-center space-x-2 bg-orange-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0`}>
-                    <Calendar className="w-4 h-4 text-orange-400 flex-shrink-0" />
-                    <span className="text-white font-medium text-sm whitespace-nowrap">{getStreakDays()}</span>
-                  </div>
-
-                  {user.isAdmin && (
-                    <div className={`flex items-center space-x-2 bg-red-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0`}>
-                      <Crown className="w-4 h-4 text-red-400 flex-shrink-0" />
-                      <span className="text-white font-medium text-sm whitespace-nowrap">Админ</span>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
+            {isAuthenticated && user && (
+              <div className="hidden lg:flex items-center justify-center flex-1 space-x-3 mx-6">
+                <div className={`flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                  <Zap className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>{getTotalXP()}</span>
+                </div>
+                
+                <div className={`flex items-center space-x-2 bg-purple-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                  <Star className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>Ур. {getUserLevel()}</span>
+                </div>
+                
+                <div className={`flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                  <Trophy className="w-4 h-4 text-green-400 flex-shrink-0" />
+                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>{getCompletedCourses()}</span>
+                </div>
+
+                <div className={`flex items-center space-x-2 bg-orange-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                  <Calendar className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>{getStreakDays()}</span>
+                </div>
+
+                {user.isAdmin && (
+                  <div className={`flex items-center space-x-2 bg-red-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                    <Crown className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>Админ</span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="flex items-center space-x-3 flex-shrink-0">
-              {isAuthenticated ? (
-                <UserDropdown activeTab={activeTab} onTabChange={onTabChange} />
+              {isAuthenticated && user ? (
+                <div className="flex items-center space-x-3">
+                  {/* Avatar Display */}
+                  <div className="flex items-center space-x-2">
+                    <div className={`h-10 w-10 rounded-full border-2 ${currentTheme.border} flex items-center justify-center text-lg hover:border-blue-400 transition-colors`}>
+                      {currentAvatar && currentAvatar.startsWith('data:') ? (
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={currentAvatar} alt={user.username} />
+                          <AvatarFallback className={`bg-gradient-to-br ${currentTheme.primary} text-white text-sm font-medium`}>
+                            {user.username.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <span className={`text-lg font-medium ${currentTheme.foreground}`}>
+                          {user.username.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <span className={`hidden md:block text-sm font-medium ${currentTheme.foreground} max-w-[100px] truncate`}>
+                      {user.username}
+                    </span>
+                  </div>
+                  <UserDropdown activeTab={activeTab} onTabChange={onTabChange} />
+                </div>
               ) : (
                 <Button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className={`bg-gradient-to-r ${currentTheme.primary} hover:opacity-90 transform hover:scale-105 transition-all duration-300 shadow-lg`}
+                  className={`bg-gradient-to-r ${currentTheme.primary} text-white font-medium transform hover:scale-105 transition-all duration-300 shadow-lg border-0 hover:shadow-xl`}
                 >
                   <LogIn className="w-4 h-4 mr-2" />
                   <span className="hidden sm:inline">Войти</span>
