@@ -1,82 +1,38 @@
 
 import React, { useState } from 'react';
 import { Crown, Medal, Award, TrendingUp } from 'lucide-react';
-
-const leaderboardData = [
-  {
-    id: 1,
-    name: 'Александр Петров',
-    avatar: '👨‍💻',
-    level: 18,
-    xp: 4250,
-    coursesCompleted: 12,
-    streak: 25,
-    rank: 1
-  },
-  {
-    id: 2,
-    name: 'Мария Иванова',
-    avatar: '👩‍🎓',
-    level: 16,
-    xp: 3890,
-    coursesCompleted: 10,
-    streak: 18,
-    rank: 2
-  },
-  {
-    id: 3,
-    name: 'Дмитрий Смирнов',
-    avatar: '👨‍🚀',
-    level: 15,
-    xp: 3620,
-    coursesCompleted: 9,
-    streak: 22,
-    rank: 3
-  },
-  {
-    id: 4,
-    name: 'Елена Козлова',
-    avatar: '👩‍💼',
-    level: 14,
-    xp: 3200,
-    coursesCompleted: 8,
-    streak: 15,
-    rank: 4
-  },
-  {
-    id: 5,
-    name: 'Вы',
-    avatar: '🎯',
-    level: 12,
-    xp: 2450,
-    coursesCompleted: 7,
-    streak: 15,
-    rank: 8
-  },
-  {
-    id: 6,
-    name: 'Иван Морозов',
-    avatar: '👨‍🔬',
-    level: 13,
-    xp: 2800,
-    coursesCompleted: 7,
-    streak: 12,
-    rank: 5
-  },
-  {
-    id: 7,
-    name: 'Анна Волкова',
-    avatar: '👩‍🎨',
-    level: 11,
-    xp: 2200,
-    coursesCompleted: 6,
-    streak: 10,
-    rank: 6
-  }
-];
+import { useProgress } from '@/context/ProgressContext';
+import { useAuth } from '@/context/AuthContext';
 
 export const LeaderBoard = () => {
   const [activeTab, setActiveTab] = useState('weekly');
+  const { courses, getTotalXP, getCompletedCourses, getUserLevel, getStreakDays } = useProgress();
+  const { user } = useAuth();
+
+  // Generate real leaderboard data based on actual users and their progress
+  const generateLeaderboardData = () => {
+    if (!user) return [];
+
+    const currentUserStats = {
+      id: user.id,
+      name: user.username,
+      avatar: '🎯',
+      level: getUserLevel(),
+      xp: getTotalXP(),
+      coursesCompleted: getCompletedCourses(),
+      streak: getStreakDays(),
+      rank: 1
+    };
+
+    // Only show current user if they have any progress
+    if (getTotalXP() === 0) {
+      return [];
+    }
+
+    return [currentUserStats];
+  };
+
+  const leaderboardData = generateLeaderboardData();
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -98,7 +54,21 @@ export const LeaderBoard = () => {
     }
   };
 
-  const sortedData = [...leaderboardData].sort((a, b) => a.rank - b.rank);
+  if (leaderboardData.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+          <div className="text-center py-16">
+            <TrendingUp className="w-16 h-16 text-gray-500 mx-auto mb-6" />
+            <h3 className="text-2xl font-bold text-white mb-4">Рейтинг пуст</h3>
+            <p className="text-gray-400 mb-6 max-w-md mx-auto">
+              Начните изучать курсы, чтобы появиться в рейтинге и соревноваться с другими студентами
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -137,47 +107,21 @@ export const LeaderBoard = () => {
           </button>
         </div>
 
-        {/* Top 3 Podium */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          {/* 2nd Place */}
-          <div className="text-center order-1">
-            <div className="bg-gradient-to-t from-gray-300/20 to-gray-400/20 rounded-t-2xl p-4 mb-2 border border-gray-300/30">
-              <span className="text-4xl">{sortedData[1]?.avatar}</span>
-              <div className="mt-2">
-                <Medal className="w-8 h-8 text-gray-300 mx-auto" />
-                <p className="text-white font-semibold mt-1">{sortedData[1]?.name}</p>
-                <p className="text-gray-300 text-sm">{sortedData[1]?.xp} XP</p>
+        {/* Top 3 Podium - only show if user has progress */}
+        {leaderboardData.length > 0 && (
+          <div className="mb-8">
+            <div className="text-center">
+              <div className="bg-gradient-to-t from-yellow-400/20 to-orange-500/20 rounded-2xl p-6 mb-2 border border-yellow-400/30 max-w-sm mx-auto">
+                <span className="text-4xl">{leaderboardData[0]?.avatar}</span>
+                <div className="mt-4">
+                  <Crown className="w-8 h-8 text-yellow-400 mx-auto" />
+                  <p className="text-white font-semibold mt-2">{leaderboardData[0]?.name}</p>
+                  <p className="text-gray-300 text-sm">{leaderboardData[0]?.xp} XP</p>
+                </div>
               </div>
             </div>
-            <div className="bg-gray-300/20 h-16 rounded-b-lg"></div>
           </div>
-
-          {/* 1st Place */}
-          <div className="text-center order-2">
-            <div className="bg-gradient-to-t from-yellow-400/20 to-orange-500/20 rounded-t-2xl p-4 mb-2 border border-yellow-400/30">
-              <span className="text-4xl">{sortedData[0]?.avatar}</span>
-              <div className="mt-2">
-                <Crown className="w-8 h-8 text-yellow-400 mx-auto" />
-                <p className="text-white font-semibold mt-1">{sortedData[0]?.name}</p>
-                <p className="text-gray-300 text-sm">{sortedData[0]?.xp} XP</p>
-              </div>
-            </div>
-            <div className="bg-yellow-400/20 h-20 rounded-b-lg"></div>
-          </div>
-
-          {/* 3rd Place */}
-          <div className="text-center order-3">
-            <div className="bg-gradient-to-t from-orange-400/20 to-orange-600/20 rounded-t-2xl p-4 mb-2 border border-orange-400/30">
-              <span className="text-4xl">{sortedData[2]?.avatar}</span>
-              <div className="mt-2">
-                <Award className="w-8 h-8 text-orange-400 mx-auto" />
-                <p className="text-white font-semibold mt-1">{sortedData[2]?.name}</p>
-                <p className="text-gray-300 text-sm">{sortedData[2]?.xp} XP</p>
-              </div>
-            </div>
-            <div className="bg-orange-400/20 h-12 rounded-b-lg"></div>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Full Leaderboard */}
@@ -187,34 +131,34 @@ export const LeaderBoard = () => {
         </div>
         
         <div className="space-y-2 p-4">
-          {sortedData.map((user) => {
-            const isUser = user.name === 'Вы';
+          {leaderboardData.map((userData) => {
+            const isUser = userData.name === user?.username;
             return (
               <div
-                key={user.id}
-                className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] ${getRankBg(user.rank, isUser)}`}
+                key={userData.id}
+                className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] ${getRankBg(userData.rank, isUser)}`}
               >
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center justify-center w-10 h-10">
-                    {getRankIcon(user.rank)}
+                    {getRankIcon(userData.rank)}
                   </div>
-                  <span className="text-3xl">{user.avatar}</span>
+                  <span className="text-3xl">{userData.avatar}</span>
                   <div>
                     <p className={`font-semibold ${isUser ? 'text-cyan-300' : 'text-white'}`}>
-                      {user.name}
+                      {userData.name}
                     </p>
-                    <p className="text-gray-300 text-sm">Уровень {user.level}</p>
+                    <p className="text-gray-300 text-sm">Уровень {userData.level}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-6 text-right">
                   <div>
-                    <p className="text-white font-semibold">{user.xp.toLocaleString()} XP</p>
-                    <p className="text-gray-300 text-sm">{user.coursesCompleted} курсов</p>
+                    <p className="text-white font-semibold">{userData.xp.toLocaleString()} XP</p>
+                    <p className="text-gray-300 text-sm">{userData.coursesCompleted} курсов</p>
                   </div>
                   <div className="flex items-center space-x-1">
                     <TrendingUp className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400 font-semibold">{user.streak}</span>
+                    <span className="text-green-400 font-semibold">{userData.streak}</span>
                   </div>
                 </div>
               </div>

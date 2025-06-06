@@ -3,6 +3,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Eye, Edit } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { useProgress } from '@/context/ProgressContext';
 
 interface User {
   id: number;
@@ -10,6 +12,8 @@ interface User {
   email: string;
   courses: number;
   lastActive: string;
+  xp: number;
+  level: number;
 }
 
 interface UserAnalyticsProps {
@@ -17,6 +21,20 @@ interface UserAnalyticsProps {
 }
 
 export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ users }) => {
+  const { user } = useAuth();
+  const { getTotalXP, getCompletedCourses, getUserLevel } = useProgress();
+
+  // Generate real user data based on current user if they have progress
+  const realUsers = user && getTotalXP() > 0 ? [{
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    courses: getCompletedCourses(),
+    lastActive: 'Сегодня',
+    xp: getTotalXP(),
+    level: getUserLevel()
+  }] : [];
+
   return (
     <Card className="bg-white/5 border-white/10">
       <CardHeader>
@@ -26,20 +44,22 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ users }) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {users.length === 0 ? (
+        {realUsers.length === 0 ? (
           <div className="text-center py-12">
             <Users className="w-12 h-12 text-gray-500 mx-auto mb-4" />
             <p className="text-gray-400 mb-2">Пользователи не найдены</p>
-            <p className="text-gray-500 text-sm">Статистика будет отображаться после регистрации пользователей</p>
+            <p className="text-gray-500 text-sm">Статистика будет отображаться после регистрации пользователей и начала изучения курсов</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {users.map((user) => (
-              <div key={user.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+            {realUsers.map((userData) => (
+              <div key={userData.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                 <div>
-                  <h4 className="text-white font-semibold">{user.username}</h4>
-                  <p className="text-gray-300 text-sm">{user.email}</p>
-                  <p className="text-gray-400 text-xs">{user.courses} курсов • {user.lastActive}</p>
+                  <h4 className="text-white font-semibold">{userData.username}</h4>
+                  <p className="text-gray-300 text-sm">{userData.email}</p>
+                  <p className="text-gray-400 text-xs">
+                    {userData.courses} курсов • {userData.xp} XP • Ур.{userData.level} • {userData.lastActive}
+                  </p>
                 </div>
                 <div className="flex space-x-2">
                   <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
