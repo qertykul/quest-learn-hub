@@ -18,7 +18,7 @@ import {
   LogOut, 
   Crown,
   User,
-  ChevronDown
+  Menu
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -51,9 +51,9 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChan
       <DropdownMenuTrigger asChild>
         <Button 
           variant="ghost" 
-          className={`relative h-10 px-2 rounded-full hover:bg-white/10 transition-all duration-200 border ${currentTheme.border} ${currentTheme.foreground}`}
+          className={`relative h-10 w-10 rounded-full bg-gradient-to-r ${currentTheme.primary} hover:opacity-90 transition-all duration-200 border-0 p-0`}
         >
-          <ChevronDown className="h-4 w-4" />
+          <Menu className="h-5 w-5 text-white" />
         </Button>
       </DropdownMenuTrigger>
       
@@ -62,7 +62,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChan
         align="end"
       >
         <div className="flex items-center space-x-3 p-3">
-          <div className={`h-12 w-12 rounded-full border-2 ${currentTheme.border} flex items-center justify-center text-2xl`}>
+          <div className={`h-12 w-12 rounded-full border-2 ${currentTheme.border} bg-gradient-to-br ${currentTheme.primary} flex items-center justify-center text-2xl`}>
             {currentAvatar && currentAvatar.startsWith('data:') ? (
               <Avatar className="h-12 w-12">
                 <AvatarImage src={currentAvatar} alt={user.username} />
@@ -71,7 +71,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChan
                 </AvatarFallback>
               </Avatar>
             ) : (
-              <span className={currentTheme.foreground}>{user.username.charAt(0).toUpperCase()}</span>
+              <span className="text-white font-medium">{user.username.charAt(0).toUpperCase()}</span>
             )}
           </div>
           <div className="flex-1 min-w-0">
@@ -92,8 +92,10 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChan
           return (
             <DropdownMenuItem
               key={item.key}
-              className={`flex items-center space-x-3 px-3 py-2 cursor-pointer hover:bg-white/10 focus:bg-white/10 transition-colors ${
-                activeTab === item.key ? 'bg-blue-500/20 text-blue-300' : currentTheme.foreground
+              className={`flex items-center space-x-3 px-3 py-2 cursor-pointer transition-colors ${
+                activeTab === item.key 
+                  ? `bg-gradient-to-r ${currentTheme.primary}/20 text-blue-300` 
+                  : `${currentTheme.foreground} hover:bg-gradient-to-r hover:${currentTheme.primary}/10`
               }`}
               onClick={() => onTabChange(item.key)}
             >
@@ -106,7 +108,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ activeTab, onTabChan
         <DropdownMenuSeparator className="bg-white/10" />
         
         <DropdownMenuItem
-          className={`flex items-center space-x-3 px-3 py-2 cursor-pointer hover:bg-red-500/20 focus:bg-red-500/20 text-red-300 transition-colors`}
+          className={`flex items-center space-x-3 px-3 py-2 cursor-pointer hover:bg-red-500/20 text-red-300 transition-colors`}
           onClick={logout}
         >
           <LogOut className="h-4 w-4" />

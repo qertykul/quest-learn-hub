@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Star, Trophy, Zap, Crown, LogIn, Target, Calendar, Users } from 'lucide-react';
+import { Star, Trophy, Zap, Crown, LogIn, Target, Calendar, Users, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -86,32 +86,40 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
             <div className="flex items-center space-x-3 flex-shrink-0">
               {isAuthenticated && user ? (
                 <div className="flex items-center space-x-3">
-                  {/* Avatar Display */}
-                  <div className="flex items-center space-x-2">
-                    <div className={`h-10 w-10 rounded-full border-2 ${currentTheme.border} flex items-center justify-center text-lg hover:border-blue-400 transition-colors`}>
+                  {/* Username moved to left */}
+                  <span className={`hidden md:block text-sm font-medium ${currentTheme.foreground} max-w-[100px] truncate`}>
+                    {user.username}
+                  </span>
+                  
+                  {/* Avatar with XP and Level */}
+                  <div className="relative">
+                    <div className={`h-12 w-12 rounded-full border-2 ${currentTheme.border} bg-gradient-to-br ${currentTheme.primary} flex items-center justify-center text-lg hover:border-blue-400 transition-colors relative group`}>
                       {currentAvatar && currentAvatar.startsWith('data:') ? (
-                        <Avatar className="h-10 w-10">
+                        <Avatar className="h-12 w-12">
                           <AvatarImage src={currentAvatar} alt={user.username} />
                           <AvatarFallback className={`bg-gradient-to-br ${currentTheme.primary} text-white text-sm font-medium`}>
                             {user.username.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                       ) : (
-                        <span className={`text-lg font-medium ${currentTheme.foreground}`}>
+                        <span className={`text-lg font-medium text-white`}>
                           {user.username.charAt(0).toUpperCase()}
                         </span>
                       )}
+                      
+                      {/* XP and Level overlay */}
+                      <div className={`absolute -bottom-1 -right-1 bg-gradient-to-r ${currentTheme.primary} text-white text-xs px-1 py-0.5 rounded-full border ${currentTheme.border} font-medium`}>
+                        {getTotalXP()}
+                      </div>
                     </div>
-                    <span className={`hidden md:block text-sm font-medium ${currentTheme.foreground} max-w-[100px] truncate`}>
-                      {user.username}
-                    </span>
                   </div>
+                  
                   <UserDropdown activeTab={activeTab} onTabChange={onTabChange} />
                 </div>
               ) : (
                 <Button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className={`bg-gradient-to-r ${currentTheme.primary} text-white font-medium transform hover:scale-105 transition-all duration-300 shadow-lg border-0 hover:shadow-xl`}
+                  className={`bg-gradient-to-r ${currentTheme.primary} hover:opacity-90 text-white font-medium transform hover:scale-105 transition-all duration-300 shadow-lg border-0 hover:shadow-xl`}
                 >
                   <LogIn className="w-4 h-4 mr-2" />
                   <span className="hidden sm:inline">Войти</span>

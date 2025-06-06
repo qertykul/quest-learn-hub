@@ -30,6 +30,8 @@ interface ProgressContextType {
   getActiveSessions: () => number;
   getAverageCompletionRate: () => number;
   getStreakDays: () => number;
+  getTotalUsers: () => number;
+  getTotalActiveCourses: () => number;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -42,7 +44,7 @@ export const useProgress = () => {
   return context;
 };
 
-// Курсы с реальными обложками книг
+// Курсы с реальными обложками книг - названия соответствуют содержанию
 const initialCourses: Course[] = [
   {
     ...creativityGeniusCourse,
@@ -50,14 +52,14 @@ const initialCourses: Course[] = [
     level: "Начинающий",
     progress: 0,
     completedLessons: 0,
-    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop" // книга с текстом
+    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop" // творческая книга
   },
   {
     ...richestManInBabylonCourse,
-    level: "Средний",
+    level: "Средний", 
     progress: 0,
     completedLessons: 0,
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop" // книга о финансах
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop" // финансовая книга
   },
   {
     ...thinkAndGrowRichCourse,
@@ -71,7 +73,7 @@ const initialCourses: Course[] = [
     level: "Средний",
     progress: 0,
     completedLessons: 0,
-    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop" // книга по психологии
+    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop" // психология
   }
 ];
 
@@ -109,10 +111,15 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const resetAllProgress = () => {
-    setCourses(initialCourses);
+    setCourses(initialCourses.map(course => ({
+      ...course,
+      progress: 0,
+      completedLessons: 0
+    })));
     localStorage.removeItem('learnhub_courses_progress');
   };
 
+  // Все статистики привязаны к реальному прогрессу
   const getTotalXP = () => {
     return courses.reduce((total, course) => {
       const completionRate = course.progress / 100;
@@ -134,10 +141,16 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return Math.min(Math.floor(totalXP / 50), 30);
   };
 
-  // Реальная статистика на основе фактического прогресса
-  const getActiveUsers = () => {
+  // Реальная статистика пользователей
+  const getTotalUsers = () => {
+    // Показываем 1 если есть прогресс, иначе 0
     const hasAnyProgress = courses.some(course => course.progress > 0);
     return hasAnyProgress ? 1 : 0;
+  };
+
+  const getActiveUsers = () => {
+    const hasActiveProgress = courses.some(course => course.progress > 0 && course.progress < 100);
+    return hasActiveProgress ? 1 : 0;
   };
 
   const getActiveSessions = () => {
@@ -151,6 +164,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return Math.round(totalProgress / courses.length);
   };
 
+  const getTotalActiveCourses = () => {
+    return courses.filter(course => course.progress > 0).length;
+  };
+
   const value = {
     courses,
     setCourses,
@@ -162,7 +179,9 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     getActiveUsers,
     getActiveSessions,
     getAverageCompletionRate,
-    getStreakDays
+    getStreakDays,
+    getTotalUsers,
+    getTotalActiveCourses
   };
 
   return (
