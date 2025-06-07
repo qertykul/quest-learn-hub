@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, XCircle, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -53,19 +53,27 @@ export const AdminToolsModal: React.FC<AdminToolsModalProps> = ({
     }
   };
 
+  const handleClose = () => {
+    if (status !== 'loading') {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md bg-black/95 backdrop-blur-xl border border-white/20 text-white">
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-3">
             {getStatusIcon()}
             {title}
           </DialogTitle>
+          <DialogDescription className="text-gray-300">
+            {operation}
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4 py-4">
           <div className="text-center">
-            <p className="text-gray-300 mb-2">Операция: {operation}</p>
             <p className={`font-medium ${getStatusColor()}`}>{message}</p>
           </div>
 
@@ -76,7 +84,7 @@ export const AdminToolsModal: React.FC<AdminToolsModalProps> = ({
                 {details.map((detail, index) => (
                   <li key={index} className="text-sm text-gray-300 flex items-start gap-2">
                     <span className="text-blue-400">•</span>
-                    {detail}
+                    <span>{detail}</span>
                   </li>
                 ))}
               </ul>

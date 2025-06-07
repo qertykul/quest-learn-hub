@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -18,9 +18,10 @@ import {
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useAdminOperations } from './AdminOperations';
+import type { AdminModalSetter } from '@/types/admin';
 
 interface SystemToolsGridProps {
-  setAdminModal: (modal: any) => void;
+  setAdminModal: AdminModalSetter;
 }
 
 export const SystemToolsGrid: React.FC<SystemToolsGridProps> = ({ setAdminModal }) => {
@@ -40,12 +41,98 @@ export const SystemToolsGrid: React.FC<SystemToolsGridProps> = ({ setAdminModal 
     showAdminModal
   } = useAdminOperations();
 
-  const handleResetProgress = () => {
-    if (confirm('Сбросить весь прогресс? Это действие нельзя отменить.')) {
-      resetAllProgress();
-      showAdminModal(setAdminModal, 'Сброс прогресса', 'Полная очистка прогресса пользователей', 'success', 'Прогресс сброшен');
+  const handleResetProgress = useCallback(() => {
+    const confirmReset = window.confirm('Сбросить весь прогресс? Это действие нельзя отменить.');
+    if (confirmReset) {
+      try {
+        resetAllProgress();
+        showAdminModal(setAdminModal, 'Сброс прогресса', 'Полная очистка прогресса пользователей', 'success', 'Прогресс сброшен');
+      } catch (error) {
+        console.error('Error resetting progress:', error);
+        showAdminModal(setAdminModal, 'Сброс прогресса', 'Ошибка сброса', 'error', 'Не удалось сбросить прогресс');
+      }
     }
-  };
+  }, [resetAllProgress, showAdminModal, setAdminModal]);
+
+  const toolButtons = [
+    {
+      onClick: () => handleExportData(setAdminModal),
+      icon: Download,
+      title: 'Экспорт',
+      subtitle: 'Скачать данные',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handleImportData(setAdminModal),
+      icon: Upload,
+      title: 'Импорт',
+      subtitle: 'Загрузить данные',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handleUserManagement(setAdminModal),
+      icon: Users,
+      title: 'Пользователи',
+      subtitle: 'Управление',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handleSystemMonitoring(setAdminModal),
+      icon: Monitor,
+      title: 'Мониторинг',
+      subtitle: 'Система',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handleEmailNotifications(setAdminModal),
+      icon: Mail,
+      title: 'Уведомления',
+      subtitle: 'Email',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handlePerformanceOptimization(setAdminModal),
+      icon: Zap,
+      title: 'Оптимизация',
+      subtitle: 'Производительность',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handleDatabaseBackup(setAdminModal),
+      icon: Database,
+      title: 'Бэкап',
+      subtitle: 'База данных',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handleSystemMaintenance(setAdminModal),
+      icon: Activity,
+      title: 'Обслуживание',
+      subtitle: 'Очистка',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: handleResetProgress,
+      icon: RefreshCw,
+      title: 'Сброс',
+      subtitle: 'Очистить прогресс',
+      className: `${currentTheme.cardBg} border-red-400/30 text-red-300 hover:bg-red-500/20`
+    },
+    {
+      onClick: () => handleSecurityAudit(setAdminModal),
+      icon: Shield,
+      title: 'Безопасность',
+      subtitle: 'Аудит',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    },
+    {
+      onClick: () => handleGenerateReports(setAdminModal),
+      icon: BarChart3,
+      title: 'Отчеты',
+      subtitle: 'Аналитика',
+      className: `${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`
+    }
+  ];
 
   return (
     <Card className={`${currentTheme.cardBg} ${currentTheme.border} backdrop-blur-lg`}>
@@ -57,115 +144,21 @@ export const SystemToolsGrid: React.FC<SystemToolsGridProps> = ({ setAdminModal 
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Button 
-            variant="outline" 
-            onClick={() => handleExportData(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Download className="w-6 h-6 mb-2" />
-            <span className="font-medium">Экспорт</span>
-            <span className="text-xs opacity-80">Скачать данные</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            onClick={() => handleImportData(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Upload className="w-6 h-6 mb-2" />
-            <span className="font-medium">Импорт</span>
-            <span className="text-xs opacity-80">Загрузить данные</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            onClick={() => handleUserManagement(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Users className="w-6 h-6 mb-2" />
-            <span className="font-medium">Пользователи</span>
-            <span className="text-xs opacity-80">Управление</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={() => handleSystemMonitoring(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Monitor className="w-6 h-6 mb-2" />
-            <span className="font-medium">Мониторинг</span>
-            <span className="text-xs opacity-80">Система</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={() => handleEmailNotifications(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Mail className="w-6 h-6 mb-2" />
-            <span className="font-medium">Уведомления</span>
-            <span className="text-xs opacity-80">Email</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={() => handlePerformanceOptimization(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Zap className="w-6 h-6 mb-2" />
-            <span className="font-medium">Оптимизация</span>
-            <span className="text-xs opacity-80">Производительность</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={() => handleDatabaseBackup(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Database className="w-6 h-6 mb-2" />
-            <span className="font-medium">Бэкап</span>
-            <span className="text-xs opacity-80">База данных</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={() => handleSystemMaintenance(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Activity className="w-6 h-6 mb-2" />
-            <span className="font-medium">Обслуживание</span>
-            <span className="text-xs opacity-80">Очистка</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={handleResetProgress}
-            className={`${currentTheme.cardBg} border-red-400/30 text-red-300 hover:bg-red-500/20 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <RefreshCw className="w-6 h-6 mb-2" />
-            <span className="font-medium">Сброс</span>
-            <span className="text-xs opacity-80">Очистить прогресс</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={() => handleSecurityAudit(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <Shield className="w-6 h-6 mb-2" />
-            <span className="font-medium">Безопасность</span>
-            <span className="text-xs opacity-80">Аудит</span>
-          </Button>
-
-          <Button 
-            variant="outline" 
-            onClick={() => handleGenerateReports(setAdminModal)}
-            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10 h-auto p-4 flex-col transition-all duration-200`}
-          >
-            <BarChart3 className="w-6 h-6 mb-2" />
-            <span className="font-medium">Отчеты</span>
-            <span className="text-xs opacity-80">Аналитика</span>
-          </Button>
+          {toolButtons.map((tool, index) => {
+            const IconComponent = tool.icon;
+            return (
+              <Button 
+                key={index}
+                variant="outline" 
+                onClick={tool.onClick}
+                className={`${tool.className} h-auto p-4 flex-col transition-all duration-200`}
+              >
+                <IconComponent className="w-6 h-6 mb-2" />
+                <span className="font-medium">{tool.title}</span>
+                <span className="text-xs opacity-80">{tool.subtitle}</span>
+              </Button>
+            );
+          })}
         </div>
       </CardContent>
     </Card>

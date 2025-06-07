@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -16,12 +16,13 @@ import {
 import { useTheme } from '@/context/ThemeContext';
 import { useProgress } from '@/context/ProgressContext';
 import { useAdminOperations } from './AdminOperations';
+import type { Course, AdminModalSetter } from '@/types/admin';
 
 interface CourseManagementSectionProps {
   onCreateCourse: () => void;
-  onEditCourse: (course: any) => void;
-  onPreviewCourse: (course: any) => void;
-  setAdminModal: (modal: any) => void;
+  onEditCourse: (course: Course) => void;
+  onPreviewCourse: (course: Course) => void;
+  setAdminModal: AdminModalSetter;
 }
 
 export const CourseManagementSection: React.FC<CourseManagementSectionProps> = ({
@@ -34,12 +35,18 @@ export const CourseManagementSection: React.FC<CourseManagementSectionProps> = (
   const { courses, setCourses } = useProgress();
   const { handleStartCourse, showAdminModal } = useAdminOperations();
 
-  const handleDeleteCourse = async (courseId: number) => {
-    if (confirm('Удалить этот курс?')) {
-      setCourses(prev => prev.filter(c => c.id !== courseId));
-      showAdminModal(setAdminModal, 'Управление курсами', 'Удаление курса', 'success', 'Курс успешно удален');
+  const handleDeleteCourse = useCallback(async (courseId: number) => {
+    const confirmDelete = window.confirm('Удалить этот курс? Это действие нельзя отменить.');
+    if (confirmDelete) {
+      try {
+        setCourses(prev => prev.filter(c => c.id !== courseId));
+        showAdminModal(setAdminModal, 'Управление курсами', 'Удаление курса', 'success', 'Курс успешно удален');
+      } catch (error) {
+        console.error('Error deleting course:', error);
+        showAdminModal(setAdminModal, 'Управление курсами', 'Ошибка удаления', 'error', 'Не удалось удалить курс');
+      }
     }
-  };
+  }, [setCourses, showAdminModal, setAdminModal]);
 
   return (
     <Card className={`${currentTheme.cardBg} ${currentTheme.border} backdrop-blur-lg`}>
@@ -75,7 +82,9 @@ export const CourseManagementSection: React.FC<CourseManagementSectionProps> = (
               courses.map((course) => (
                 <div key={course.id} className={`flex items-center justify-between p-4 ${currentTheme.cardBg} rounded-lg ${currentTheme.border} border hover:bg-white/5 transition-colors`}>
                   <div className="flex items-center space-x-4 flex-1">
-                    <div className="text-3xl">{course.badge}</div>
+                    <div className="text-3xl" role="img" aria-label={`Course icon: ${course.badge}`}>
+                      {course.badge}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <h4 className={`${currentTheme.foreground} font-medium text-lg`}>{course.title}</h4>
                       <p className={`${currentTheme.muted} text-sm`}>Автор: {course.author}</p>

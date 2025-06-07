@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useProgress } from '@/context/ProgressContext';
 import { useTheme } from '@/context/ThemeContext';
 import { AdminStats } from './AdminStats';
@@ -9,62 +9,74 @@ import { SystemToolsGrid } from './SystemToolsGrid';
 import { CourseManagementSection } from './CourseManagementSection';
 import { CoursePreviewDialog } from './CoursePreviewDialog';
 import { useAdminOperations } from './AdminOperations';
+import type { Course, AdminModalState } from '@/types/admin';
 
 export const EnhancedAdminPanel = () => {
   const { courses, setCourses } = useProgress();
   const { currentTheme } = useTheme();
   const [showCourseEditor, setShowCourseEditor] = useState(false);
-  const [editingCourse, setEditingCourse] = useState<any>(null);
-  const [previewCourse, setPreviewCourse] = useState<any>(null);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [previewCourse, setPreviewCourse] = useState<Course | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const { showAdminModal } = useAdminOperations();
   
-  // Состояние для модального окна админ-инструментов
-  const [adminModal, setAdminModal] = useState({
+  const [adminModal, setAdminModal] = useState<AdminModalState>({
     isOpen: false,
     title: '',
     operation: '',
-    status: 'info' as 'loading' | 'success' | 'error' | 'info',
+    status: 'info',
     message: '',
-    details: [] as string[]
+    details: []
   });
 
-  const closeAdminModal = () => {
+  const closeAdminModal = useCallback(() => {
     setAdminModal(prev => ({ ...prev, isOpen: false }));
-  };
+  }, []);
 
-  const handleCreateCourse = () => {
+  const handleCreateCourse = useCallback(() => {
     setEditingCourse(null);
     setShowCourseEditor(true);
-  };
+  }, []);
 
-  const handleEditCourse = (course: any) => {
+  const handleEditCourse = useCallback((course: Course) => {
     setEditingCourse(course);
     setShowCourseEditor(true);
-  };
+  }, []);
 
-  const handlePreviewCourse = (course: any) => {
+  const handlePreviewCourse = useCallback((course: Course) => {
     console.log('Opening course preview for:', course.title);
     setPreviewCourse(course);
     setShowPreview(true);
-  };
+  }, []);
 
-  const handleSaveCourse = (courseData: any) => {
-    if (editingCourse) {
-      setCourses(prev => prev.map(c => c.id === editingCourse.id ? { ...c, ...courseData } : c));
-      showAdminModal(setAdminModal, 'Управление курсами', 'Обновление курса', 'success', 'Курс успешно обновлен');
-    } else {
-      const newCourse = {
-        id: Math.max(...courses.map(c => c.id), 0) + 1,
-        progress: 0,
-        completedLessons: 0,
-        ...courseData
-      };
-      setCourses(prev => [...prev, newCourse]);
-      showAdminModal(setAdminModal, 'Управление курсами', 'Создание курса', 'success', 'Курс успешно создан');
+  const handleSaveCourse = useCallback((courseData: Partial<Course>) => {
+    try {
+      if (editingCourse) {
+        setCourses(prev => prev.map(c => 
+          c.id === editingCourse.id ? { ...c, ...courseData } : c
+        ));
+        showAdminModal(setAdminModal, 'Управление курсами', 'Обновление курса', 'success', 'Курс успешно обновлен');
+      } else {
+        const newCourse: Course = {
+          id: Math.max(...courses.map(c => c.id), 0) + 1,
+          progress: 0,
+          completedLessons: 0,
+          title: '',
+          author: '',
+          badge: '📚',
+          lessons: 0,
+          xp: 0,
+          ...courseData
+        } as Course;
+        setCourses(prev => [...prev, newCourse]);
+        showAdminModal(setAdminModal, 'Управление курсами', 'Создание курса', 'success', 'Курс успешно создан');
+      }
+      setShowCourseEditor(false);
+    } catch (error) {
+      console.error('Error saving course:', error);
+      showAdminModal(setAdminModal, 'Управление курсами', 'Ошибка сохранения', 'error', 'Не удалось сохранить курс');
     }
-    setShowCourseEditor(false);
-  };
+  }, [editingCourse, courses, setCourses, showAdminModal]);
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -96,7 +108,6 @@ export const EnhancedAdminPanel = () => {
         setAdminModal={setAdminModal}
       />
 
-      {/* Course Editor */}
       {showCourseEditor && (
         <CourseEditor
           course={editingCourse}
@@ -105,7 +116,6 @@ export const EnhancedAdminPanel = () => {
         />
       )}
 
-      {/* Admin Tools Modal */}
       <AdminToolsModal
         isOpen={adminModal.isOpen}
         onClose={closeAdminModal}
