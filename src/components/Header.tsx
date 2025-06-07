@@ -52,31 +52,31 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
               </div>
             </div>
 
-            {/* Statistics bars - показываем всегда для авторизованных пользователей */}
+            {/* Statistics bars - более заметные и доступные на больших экранах */}
             {isAuthenticated && user && (
-              <div className="hidden lg:flex items-center justify-center flex-1 space-x-3 mx-6">
-                <div className="flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
+              <div className="hidden md:flex items-center justify-center flex-1 space-x-2 lg:space-x-3 mx-4 lg:mx-6">
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-500/20 to-blue-600/20 backdrop-blur-sm rounded-xl px-3 lg:px-4 py-2 lg:py-3 border border-blue-400/20 flex-1 justify-center min-w-0 max-w-[140px] lg:max-w-[180px] hover:scale-105 transition-transform">
                   <Zap className="w-4 h-4 text-blue-400 flex-shrink-0" />
                   <span className="font-medium text-sm whitespace-nowrap text-white">{getTotalXP()}</span>
                 </div>
                 
-                <div className="flex items-center space-x-2 bg-purple-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-500/20 to-purple-600/20 backdrop-blur-sm rounded-xl px-3 lg:px-4 py-2 lg:py-3 border border-purple-400/20 flex-1 justify-center min-w-0 max-w-[140px] lg:max-w-[180px] hover:scale-105 transition-transform">
                   <Star className="w-4 h-4 text-purple-400 flex-shrink-0" />
                   <span className="font-medium text-sm whitespace-nowrap text-white">Ур. {getUserLevel()}</span>
                 </div>
                 
-                <div className="flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-green-500/20 to-green-600/20 backdrop-blur-sm rounded-xl px-3 lg:px-4 py-2 lg:py-3 border border-green-400/20 flex-1 justify-center min-w-0 max-w-[140px] lg:max-w-[180px] hover:scale-105 transition-transform">
                   <Trophy className="w-4 h-4 text-green-400 flex-shrink-0" />
                   <span className="font-medium text-sm whitespace-nowrap text-white">{getCompletedCourses()}</span>
                 </div>
 
-                <div className="flex items-center space-x-2 bg-orange-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-orange-500/20 to-orange-600/20 backdrop-blur-sm rounded-xl px-3 lg:px-4 py-2 lg:py-3 border border-orange-400/20 flex-1 justify-center min-w-0 max-w-[140px] lg:max-w-[180px] hover:scale-105 transition-transform">
                   <Calendar className="w-4 h-4 text-orange-400 flex-shrink-0" />
                   <span className="font-medium text-sm whitespace-nowrap text-white">{getStreakDays()}</span>
                 </div>
 
                 {user.isAdmin && (
-                  <div className="flex items-center space-x-2 bg-red-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
+                  <div className="flex items-center space-x-2 bg-gradient-to-r from-red-500/20 to-red-600/20 backdrop-blur-sm rounded-xl px-3 lg:px-4 py-2 lg:py-3 border border-red-400/20 flex-1 justify-center min-w-0 max-w-[140px] lg:max-w-[180px] hover:scale-105 transition-transform">
                     <Crown className="w-4 h-4 text-red-400 flex-shrink-0" />
                     <span className="font-medium text-sm whitespace-nowrap text-white">Админ</span>
                   </div>
@@ -87,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
             <div className="flex items-center space-x-3 flex-shrink-0">
               {isAuthenticated && user ? (
                 <div className="flex items-center space-x-3">
-                  <span className="hidden md:block text-sm font-medium text-white max-w-[100px] truncate">
+                  <span className="hidden lg:block text-sm font-medium text-white max-w-[100px] truncate">
                     {user.username}
                   </span>
                   
