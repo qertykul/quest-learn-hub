@@ -52,6 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
               </div>
             </div>
 
+            {/* Statistics bars - показываем всегда для авторизованных пользователей */}
             {isAuthenticated && user && (
               <div className="hidden lg:flex items-center justify-center flex-1 space-x-3 mx-6">
                 <div className="flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">

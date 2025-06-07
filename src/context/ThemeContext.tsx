@@ -33,14 +33,14 @@ export const themes: Theme[] = [
     id: 'light',
     name: 'Светлая',
     primary: 'from-blue-600 to-indigo-700',
-    secondary: 'from-gray-300 to-gray-400',
-    accent: 'from-blue-400 to-indigo-500',
-    background: 'from-gray-50 via-blue-50 to-indigo-50',
-    foreground: 'text-gray-900',
-    muted: 'text-gray-600',
-    border: 'border-gray-200',
+    secondary: 'from-gray-400 to-gray-500',
+    accent: 'from-blue-500 to-indigo-600',
+    background: 'from-gray-700 via-gray-800 to-gray-900',
+    foreground: 'text-black',
+    muted: 'text-gray-900',
+    border: 'border-gray-600',
     buttonHover: 'hover:from-blue-700 hover:to-indigo-800 hover:shadow-lg hover:scale-105',
-    cardBg: 'bg-white/80'
+    cardBg: 'bg-gray-200/80'
   },
   {
     id: 'neon',
