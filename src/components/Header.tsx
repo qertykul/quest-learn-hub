@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Star, Trophy, Zap, Crown, LogIn, Target, Calendar, Users, Menu } from 'lucide-react';
+import { Star, Trophy, Zap, Crown, LogIn, Target, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -54,30 +54,30 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
 
             {isAuthenticated && user && (
               <div className="hidden lg:flex items-center justify-center flex-1 space-x-3 mx-6">
-                <div className={`flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                <div className="flex items-center space-x-2 bg-blue-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
                   <Zap className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>{getTotalXP()}</span>
+                  <span className="font-medium text-sm whitespace-nowrap text-white">{getTotalXP()}</span>
                 </div>
                 
-                <div className={`flex items-center space-x-2 bg-purple-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                <div className="flex items-center space-x-2 bg-purple-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
                   <Star className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>Ур. {getUserLevel()}</span>
+                  <span className="font-medium text-sm whitespace-nowrap text-white">Ур. {getUserLevel()}</span>
                 </div>
                 
-                <div className={`flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                <div className="flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
                   <Trophy className="w-4 h-4 text-green-400 flex-shrink-0" />
-                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>{getCompletedCourses()}</span>
+                  <span className="font-medium text-sm whitespace-nowrap text-white">{getCompletedCourses()}</span>
                 </div>
 
-                <div className={`flex items-center space-x-2 bg-orange-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                <div className="flex items-center space-x-2 bg-orange-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
                   <Calendar className="w-4 h-4 text-orange-400 flex-shrink-0" />
-                  <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>{getStreakDays()}</span>
+                  <span className="font-medium text-sm whitespace-nowrap text-white">{getStreakDays()}</span>
                 </div>
 
                 {user.isAdmin && (
-                  <div className={`flex items-center space-x-2 bg-red-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border ${currentTheme.border} flex-1 justify-center min-w-0 max-w-[180px]`}>
+                  <div className="flex items-center space-x-2 bg-red-500/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 flex-1 justify-center min-w-0 max-w-[180px]">
                     <Crown className="w-4 h-4 text-red-400 flex-shrink-0" />
-                    <span className={`font-medium text-sm whitespace-nowrap ${currentTheme.foreground}`}>Админ</span>
+                    <span className="font-medium text-sm whitespace-nowrap text-white">Админ</span>
                   </div>
                 )}
               </div>
@@ -86,35 +86,17 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
             <div className="flex items-center space-x-3 flex-shrink-0">
               {isAuthenticated && user ? (
                 <div className="flex items-center space-x-3">
-                  {/* Username moved to left */}
-                  <span className={`hidden md:block text-sm font-medium ${currentTheme.foreground} max-w-[100px] truncate`}>
+                  <span className="hidden md:block text-sm font-medium text-white max-w-[100px] truncate">
                     {user.username}
                   </span>
                   
-                  {/* Avatar with XP and Level */}
                   <div className="relative">
-                    <div className={`h-12 w-12 rounded-full border-2 ${currentTheme.border} bg-gradient-to-br ${currentTheme.primary} flex items-center justify-center text-lg hover:border-blue-400 transition-colors relative group`}>
-                      {currentAvatar && currentAvatar.startsWith('data:') ? (
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={currentAvatar} alt={user.username} />
-                          <AvatarFallback className={`bg-gradient-to-br ${currentTheme.primary} text-white text-sm font-medium`}>
-                            {user.username.charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                      ) : (
-                        <span className={`text-lg font-medium text-white`}>
-                          {user.username.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                      
-                      {/* XP and Level overlay */}
-                      <div className={`absolute -bottom-1 -right-1 bg-gradient-to-r ${currentTheme.primary} text-white text-xs px-1 py-0.5 rounded-full border ${currentTheme.border} font-medium`}>
-                        {getTotalXP()}
-                      </div>
+                    <UserDropdown activeTab={activeTab} onTabChange={onTabChange} />
+                    
+                    <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs px-1 py-0.5 rounded-full border border-white/20 font-medium">
+                      {getTotalXP()}
                     </div>
                   </div>
-                  
-                  <UserDropdown activeTab={activeTab} onTabChange={onTabChange} />
                 </div>
               ) : (
                 <Button

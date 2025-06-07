@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -97,9 +98,9 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className={`max-w-4xl max-h-[90vh] overflow-y-auto ${currentTheme.cardBg} ${currentTheme.border}`}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-black/95 backdrop-blur-xl border border-white/20 text-white">
         <DialogHeader>
-          <DialogTitle className={currentTheme.foreground}>
+          <DialogTitle className="text-white text-xl">
             {course ? 'Редактировать курс' : 'Создать курс'}
           </DialogTitle>
         </DialogHeader>
@@ -108,32 +109,32 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
           {/* Basic Course Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="title" className={currentTheme.foreground}>Название курса</Label>
+              <Label htmlFor="title" className="text-white">Название курса</Label>
               <Input
                 id="title"
                 value={courseData.title}
                 onChange={(e) => setCourseData(prev => ({ ...prev, title: e.target.value }))}
-                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="author" className={currentTheme.foreground}>Автор</Label>
+              <Label htmlFor="author" className="text-white">Автор</Label>
               <Input
                 id="author"
                 value={courseData.author}
                 onChange={(e) => setCourseData(prev => ({ ...prev, author: e.target.value }))}
-                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="level" className={currentTheme.foreground}>Уровень</Label>
+              <Label htmlFor="level" className="text-white">Уровень</Label>
               <select
                 id="level"
                 value={courseData.level}
                 onChange={(e) => setCourseData(prev => ({ ...prev, level: e.target.value }))}
-                className={`w-full px-3 py-2 rounded-md ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                className="w-full px-3 py-2 rounded-md bg-white/10 border border-white/20 text-white"
               >
                 <option value="Начинающий">Начинающий</option>
                 <option value="Средний">Средний</option>
@@ -142,47 +143,47 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
             </div>
             
             <div>
-              <Label htmlFor="xp" className={currentTheme.foreground}>Опыт (XP)</Label>
+              <Label htmlFor="xp" className="text-white">Опыт (XP)</Label>
               <Input
                 id="xp"
                 type="number"
                 value={courseData.xp}
                 onChange={(e) => setCourseData(prev => ({ ...prev, xp: parseInt(e.target.value) || 0 }))}
-                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="badge" className={currentTheme.foreground}>Эмодзи</Label>
+              <Label htmlFor="badge" className="text-white">Эмодзи</Label>
               <Input
                 id="badge"
                 value={courseData.badge}
                 onChange={(e) => setCourseData(prev => ({ ...prev, badge: e.target.value }))}
-                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               />
             </div>
           </div>
           
           <div>
-            <Label htmlFor="description" className={currentTheme.foreground}>Описание</Label>
+            <Label htmlFor="description" className="text-white">Описание</Label>
             <Textarea
               id="description"
               value={courseData.description}
               onChange={(e) => setCourseData(prev => ({ ...prev, description: e.target.value }))}
-              className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+              className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               rows={3}
             />
           </div>
 
           {/* Book Cover Selection */}
           <div>
-            <Label className={currentTheme.foreground}>Выберите обложку книги</Label>
+            <Label className="text-white">Выберите обложку книги</Label>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mt-2">
               {bookCovers.map((cover, index) => (
                 <div
                   key={index}
                   className={`cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
-                    courseData.image === cover ? 'border-blue-400 scale-105' : currentTheme.border
+                    courseData.image === cover ? 'border-blue-400 scale-105' : 'border-white/20'
                   }`}
                   onClick={() => setCourseData(prev => ({ ...prev, image: cover }))}
                 >
@@ -193,35 +194,35 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
           </div>
 
           {/* Lessons Management */}
-          <Card className={`${currentTheme.cardBg} ${currentTheme.border}`}>
+          <Card className="bg-white/10 border-white/20">
             <CardHeader>
-              <CardTitle className={`${currentTheme.foreground} flex items-center gap-2`}>
+              <CardTitle className="text-white flex items-center gap-2">
                 <Edit className="w-5 h-5" />
                 Уроки курса ({courseData.fullLessons.length})
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Add New Lesson */}
-              <div className={`p-4 rounded-lg ${currentTheme.cardBg} border ${currentTheme.border}`}>
-                <h4 className={`${currentTheme.foreground} font-medium mb-3`}>Добавить урок</h4>
+              <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                <h4 className="text-white font-medium mb-3">Добавить урок</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <Input
                     placeholder="Название урока"
                     value={newLesson.title}
                     onChange={(e) => setNewLesson(prev => ({ ...prev, title: e.target.value }))}
-                    className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                   />
                   <Input
                     type="number"
                     placeholder="Длительность (мин)"
                     value={newLesson.duration}
                     onChange={(e) => setNewLesson(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
-                    className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                   />
                   <Button 
                     onClick={handleAddLesson}
                     disabled={!newLesson.title}
-                    className={`bg-gradient-to-r ${currentTheme.primary} hover:opacity-90`}
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Добавить
@@ -231,7 +232,7 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
                   placeholder="Содержание урока"
                   value={newLesson.content}
                   onChange={(e) => setNewLesson(prev => ({ ...prev, content: e.target.value }))}
-                  className={`mt-3 ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                  className="mt-3 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                   rows={3}
                 />
               </div>
@@ -239,18 +240,18 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
               {/* Existing Lessons */}
               <div className="space-y-3">
                 {courseData.fullLessons.map((lesson) => (
-                  <div key={lesson.id} className={`p-4 rounded-lg ${currentTheme.cardBg} border ${currentTheme.border}`}>
+                  <div key={lesson.id} className="p-4 rounded-lg bg-white/5 border border-white/10">
                     {editingLesson === lesson.id ? (
                       <div className="space-y-3">
                         <Input
                           value={lesson.title}
                           onChange={(e) => handleUpdateLesson(lesson.id, { title: e.target.value })}
-                          className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                         />
                         <Textarea
                           value={lesson.content}
                           onChange={(e) => handleUpdateLesson(lesson.id, { content: e.target.value })}
-                          className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground}`}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                           rows={3}
                         />
                         <div className="flex gap-2">
@@ -265,16 +266,16 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
                     ) : (
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h5 className={`${currentTheme.foreground} font-medium`}>{lesson.title}</h5>
-                          <p className={`${currentTheme.muted} text-sm mt-1`}>{lesson.content.substring(0, 100)}...</p>
-                          <span className={`${currentTheme.muted} text-xs`}>{lesson.duration} мин</span>
+                          <h5 className="text-white font-medium">{lesson.title}</h5>
+                          <p className="text-gray-300 text-sm mt-1">{lesson.content.substring(0, 100)}...</p>
+                          <span className="text-gray-400 text-xs">{lesson.duration} мин</span>
                         </div>
                         <div className="flex gap-2 ml-4">
                           <Button 
                             size="sm" 
                             variant="outline"
                             onClick={() => setEditingLesson(lesson.id)}
-                            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`}
+                            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                           >
                             <Edit className="w-4 h-4" />
                           </Button>
@@ -299,7 +300,7 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
           <div className="flex gap-3 pt-4">
             <Button 
               onClick={handleSave}
-              className={`flex-1 bg-gradient-to-r ${currentTheme.primary} hover:opacity-90`}
+              className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90"
             >
               <Save className="w-4 h-4 mr-2" />
               Сохранить курс
@@ -307,7 +308,7 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
             <Button 
               variant="outline" 
               onClick={onClose}
-              className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.foreground} hover:bg-white/10`}
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               Отмена
             </Button>
