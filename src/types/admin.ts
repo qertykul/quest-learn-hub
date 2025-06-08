@@ -2,12 +2,16 @@
 export interface Course {
   id: number;
   title: string;
-  author: string;
-  badge: string;
-  lessons: number;
-  xp: number;
+  description: string;
   progress: number;
+  author: string;
+  level: string;
+  xp: number;
+  badge: string;
+  image: string;
+  lessons: number;
   completedLessons: number;
+  fullLessons?: any[];
 }
 
 export interface AdminModalState {

@@ -9,7 +9,23 @@ import { SystemToolsGrid } from './SystemToolsGrid';
 import { CourseManagementSection } from './CourseManagementSection';
 import { CoursePreviewDialog } from './CoursePreviewDialog';
 import { useAdminOperations } from './AdminOperations';
-import type { Course, AdminModalState } from '@/types/admin';
+import type { AdminModalState } from '@/types/admin';
+
+// Use Course type from ProgressContext to ensure consistency
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  progress: number;
+  author: string;
+  level: string;
+  xp: number;
+  badge: string;
+  image: string;
+  lessons: number;
+  completedLessons: number;
+  fullLessons?: any[];
+}
 
 export const EnhancedAdminPanel = () => {
   const { courses, setCourses } = useProgress();
