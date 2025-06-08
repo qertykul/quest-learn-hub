@@ -21,7 +21,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   const optimizeImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const img = new Image();
+      const img = new HTMLImageElement();
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
