@@ -15,6 +15,7 @@ interface Course {
   lessons: number;
   completedLessons: number;
   fullLessons?: any[];
+  imageSize?: number; // Добавляем поддержку размера изображения
 }
 
 interface CourseCardProps {
@@ -25,16 +26,31 @@ interface CourseCardProps {
 
 export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete }) => {
   const isInteractiveCourse = course.fullLessons && course.fullLessons.length > 0;
+  
+  // Применяем размер изображения если он задан
+  const getImageStyle = () => {
+    if (course.imageSize && course.imageSize !== 100) {
+      const scale = course.imageSize / 100;
+      return {
+        transform: `scale(${scale})`,
+        transformOrigin: 'center',
+        transition: 'transform 0.3s ease'
+      };
+    }
+    return {};
+  };
 
   return (
     <div className={`group bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-500 hover:bg-white/10 border border-white/10 hover:border-white/20 relative shadow-xl ${isInteractiveCourse ? 'cursor-pointer' : ''} animate-fade-in-up hover:shadow-2xl`}>
       {/* Course Image */}
       <div className="relative h-40 md:h-48 overflow-hidden">
-        <img 
-          src={course.image} 
-          alt={course.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
+        <div style={getImageStyle()} className="w-full h-full">
+          <img 
+            src={course.image} 
+            alt={course.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+        </div>
         
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>

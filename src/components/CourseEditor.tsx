@@ -26,6 +26,7 @@ interface Course {
   image: string;
   lessons: number;
   fullLessons?: Lesson[];
+  imageSize?: number;
 }
 
 interface CourseEditorProps {
@@ -44,7 +45,8 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
     badge: course?.badge || '📚',
     image: course?.image || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop',
     lessons: course?.lessons || 0,
-    fullLessons: course?.fullLessons || []
+    fullLessons: course?.fullLessons || [],
+    imageSize: course?.imageSize || 100
   });
 
   // Автоматическое обновление количества уроков при изменении массива уроков
