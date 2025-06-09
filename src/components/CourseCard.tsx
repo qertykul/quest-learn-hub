@@ -1,8 +1,7 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, Star, Clock, Edit, Trash2, BookOpen, Trophy, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { optimizeImage, getImageSize } from '@/services/imageOptimizer';
 
 interface Course {
   id: number;
@@ -47,60 +46,34 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
     return {};
   };
 
-  const [optimizedImage, setOptimizedImage] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [imageSrc, setImageSrc] = useState('');
 
-  React.useEffect(() => {
-    const optimizeCourseImage = async () => {
-      try {
-        // Загружаем изображение
-        const response = await fetch(course.image);
-        const imageBuffer = await response.arrayBuffer();
-        
-        // Оптимизируем изображение
-        const optimizedBuffer = await optimizeImage(Buffer.from(imageBuffer), {
-          width: 800,
-          quality: 80,
-          format: 'webp'
-        });
-
-        // Создаем URL для оптимизированного изображения
-        const blob = new Blob([optimizedBuffer], { type: 'image/webp' });
-        setOptimizedImage(URL.createObjectURL(blob));
-      } catch (error) {
-        console.error('Ошибка при оптимизации изображения курса:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    optimizeCourseImage();
+  useEffect(() => {
+    // Используем оригинальный URL изображения
+    setImageSrc(course.image);
   }, [course.image]);
 
   return (
     <div className={`group bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-500 hover:bg-white/10 border border-white/10 hover:border-white/20 relative shadow-xl ${isInteractiveCourse ? 'cursor-pointer' : ''} animate-fade-in-up hover:shadow-2xl`}>
       {/* Course Image */}
-      <div className="relative w-full h-[200px]">
-        {isLoading ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      <div className="relative w-full h-[200px] bg-gray-800/50">
+        <img 
+          src={imageSrc} 
+          alt={course.title}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          loading="lazy"
+          onLoad={() => setIsImageLoaded(true)}
+          onError={(e) => {
+            console.error('Ошибка загрузки изображения:', course.image);
+            // Можно установить заглушку в случае ошибки
+            e.currentTarget.src = '/placeholder-course.jpg';
+          }}
+        />
+        {!isImageLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-pulse bg-gray-700 w-full h-full"></div>
           </div>
-        ) : (
-          optimizedImage ? (
-            <img 
-              src={optimizedImage}
-              alt={course.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          ) : (
-            <img 
-              src={course.image}
-              alt={course.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          )
         )}
       </div>
       <div className="relative h-40 md:h-48 overflow-hidden">
