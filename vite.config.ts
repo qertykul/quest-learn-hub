@@ -4,6 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
+// Force Netlify rebuild
 export default defineConfig(({ mode }) => ({
   base: './',
   server: {
