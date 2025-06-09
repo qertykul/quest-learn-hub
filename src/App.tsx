@@ -10,7 +10,6 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  console.log('Forcing Netlify rebuild - App.tsx');
   return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>

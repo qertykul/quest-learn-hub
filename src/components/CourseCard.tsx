@@ -32,53 +32,26 @@ interface CourseCardProps {
 
 export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete }) => {
   const isInteractiveCourse = course.fullLessons && course.fullLessons.length > 0;
-  
-  // Применяем размер изображения если он задан
-  const getImageStyle = () => {
-    if (course.imageSize && course.imageSize !== 100) {
-      const scale = course.imageSize / 100;
-      return {
-        transform: `scale(${scale})`,
-        transformOrigin: 'center',
-        transition: 'transform 0.3s ease'
-      };
-    }
-    return {};
-  };
 
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
 
   useEffect(() => {
-    console.log('Загружаем изображение для курса:', course.title);
-    console.log('URL изображения:', course.image);
-    
-    // Проверяем, что URL не пустой
     if (!course.image) {
-      console.error('URL изображения пустой для курса:', course.title);
+      // console.error('Image URL is empty for course:', course.title); // Optional: log error
+      setImageSrc('/placeholder-course.jpg'); // Use a known placeholder
+      setIsImageLoaded(true); // Consider it loaded to hide spinner
       return;
     }
-
-    // Проверяем доступность изображения
-    fetch(course.image)
-      .then(response => {
-        if (!response.ok) {
-          console.error('Ошибка при загрузке изображения:', response.status);
-        } else {
-          console.log('Изображение успешно загружено для курса:', course.title);
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при проверке изображения:', error);
-      });
-
     setImageSrc(course.image);
-  }, [course.image]);
+    // Reset loading state when image URL changes
+    setIsImageLoaded(false);
+  }, [course.image, course.title]);
 
   return (
     <div className={`group bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-500 hover:bg-white/10 border border-white/10 hover:border-white/20 relative shadow-xl ${isInteractiveCourse ? 'cursor-pointer' : ''} animate-fade-in-up hover:shadow-2xl`}>
       {/* Course Image */}
-      <div className="relative w-full h-[200px] bg-gray-800/50">
+      <div className="relative w-full h-[250px] bg-gray-800/50"> // Increased height
         <img 
           src={imageSrc} 
           alt={course.title}
@@ -102,16 +75,13 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
           </div>
         )}
       </div>
+      {/* The container below used to hold the duplicate image and overlays. Now only overlays (if any) will be here relative to this container. */}
+      {/* The duplicate image itself and its direct wrapper are removed. */}
       <div className="relative h-40 md:h-48 overflow-hidden">
-        <div style={getImageStyle()} className="w-full h-full">
-          <img 
-            src={course.image} 
-            alt={course.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-        </div>
         
-        {/* Gradient overlay */}
+        {/* Gradient overlay (and other overlays like admin buttons, progress bar were here) */} 
+        {/* These overlays might need repositioning if they were relative to the removed duplicate image. */} 
+        {/* For now, only the duplicate image div is removed from here: */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
         
         <div className="absolute top-4 left-4 transform group-hover:scale-110 transition-transform duration-300">
