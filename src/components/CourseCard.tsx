@@ -50,7 +50,28 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
   const [imageSrc, setImageSrc] = useState('');
 
   useEffect(() => {
-    // Используем оригинальный URL изображения
+    console.log('Загружаем изображение для курса:', course.title);
+    console.log('URL изображения:', course.image);
+    
+    // Проверяем, что URL не пустой
+    if (!course.image) {
+      console.error('URL изображения пустой для курса:', course.title);
+      return;
+    }
+
+    // Проверяем доступность изображения
+    fetch(course.image)
+      .then(response => {
+        if (!response.ok) {
+          console.error('Ошибка при загрузке изображения:', response.status);
+        } else {
+          console.log('Изображение успешно загружено для курса:', course.title);
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при проверке изображения:', error);
+      });
+
     setImageSrc(course.image);
   }, [course.image]);
 
@@ -65,7 +86,12 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onEdit, onDelete
           loading="lazy"
           onLoad={() => setIsImageLoaded(true)}
           onError={(e) => {
-            console.error('Ошибка загрузки изображения:', course.image);
+            console.error('Ошибка загрузки изображения:', {
+              url: course.image,
+              courseId: course.id,
+              courseTitle: course.title,
+              error: e
+            });
             // Можно установить заглушку в случае ошибки
             e.currentTarget.src = '/placeholder-course.jpg';
           }}
