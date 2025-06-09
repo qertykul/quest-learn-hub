@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { BookOpen, Edit, Trash2, Eye } from 'lucide-react';
+import { Lesson } from '@/types/adminOperations';
 
 interface Course {
   id: number;
@@ -16,7 +16,7 @@ interface Course {
   level: string;
   image: string;
   progress: number;
-  fullLessons?: any[];
+  fullLessons?: Lesson[];
 }
 
 interface CourseManagementProps {
@@ -133,7 +133,7 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ courses, onD
                 <div>
                   <h4 className="text-white font-medium mb-2">Уроки курса:</h4>
                   <div className="space-y-2 max-h-40 overflow-y-auto">
-                    {previewCourse.fullLessons.map((lesson: any, index: number) => (
+                    {previewCourse.fullLessons.map((lesson: Lesson, index: number) => (
                       <div key={lesson.id} className="flex items-center justify-between p-2 bg-white/5 rounded-lg">
                         <span className="text-white text-sm">
                           {index + 1}. {lesson.title}

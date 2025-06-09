@@ -14,7 +14,7 @@ export interface Course {
   fullLessons?: any[];
 }
 
-export interface AdminModalState {
+export interface AdminModal {
   isOpen: boolean;
   title: string;
   operation: string;
@@ -23,7 +23,7 @@ export interface AdminModalState {
   details: string[];
 }
 
-export type AdminModalSetter = (modal: AdminModalState | ((prev: AdminModalState) => AdminModalState)) => void;
+export type AdminModalSetter = (modal: AdminModal | ((prev: AdminModal) => AdminModal)) => void;
 
 export interface SystemStats {
   memoryUsage: number;

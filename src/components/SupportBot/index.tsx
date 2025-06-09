@@ -36,7 +36,7 @@ export const SupportBot = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, messages.length]);
 
   const sendMessage = () => {
     if (!inputMessage.trim()) return;

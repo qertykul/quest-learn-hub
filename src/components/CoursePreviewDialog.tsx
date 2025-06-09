@@ -13,13 +13,16 @@ import {
   Plus
 } from 'lucide-react';
 import { useAdminOperations } from './AdminOperations';
+import { Lesson } from '@/types/adminOperations';
+import { Course } from '@/types/adminOperations';
+import { AdminModalSetter } from './AdminOperations';
 
 interface CoursePreviewDialogProps {
-  course: any;
+  course: Course;
   isOpen: boolean;
   onClose: () => void;
-  onEdit: (course: any) => void;
-  setAdminModal: (modal: any) => void;
+  onEdit: (course: Course) => void;
+  setAdminModal: AdminModalSetter;
 }
 
 export const CoursePreviewDialog: React.FC<CoursePreviewDialogProps> = ({
@@ -178,7 +181,7 @@ export const CoursePreviewDialog: React.FC<CoursePreviewDialogProps> = ({
             
             {course.fullLessons && course.fullLessons.length > 0 ? (
               <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
-                {course.fullLessons.map((lesson: any, index: number) => {
+                {course.fullLessons.map((lesson: Lesson, index: number) => {
                   const isCompleted = index < (course.completedLessons || 0);
                   const isCurrent = index === (course.completedLessons || 0);
                   
@@ -199,24 +202,17 @@ export const CoursePreviewDialog: React.FC<CoursePreviewDialogProps> = ({
                             ? 'bg-green-500' 
                             : isCurrent 
                               ? 'bg-blue-500' 
-                              : 'bg-gray-600'
+                              : 'bg-white/5'
                         }`}>
-                          {isCompleted ? <CheckCircle className="w-5 h-5" /> : index + 1}
+                          {isCompleted ? '✓' : isCurrent ? '→' : index + 1}
                         </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className={`font-medium ${isCompleted ? 'text-green-300' : isCurrent ? 'text-blue-300' : 'text-white'}`}>
-                              {lesson.title}
-                            </span>
-                            {isCurrent && (
-                              <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">
-                                Текущий
-                              </span>
-                            )}
-                          </div>
-                          {lesson.content && (
+                        <div className="space-y-1">
+                          <h3 className="text-white font-medium">{lesson.title}</h3>
+                          <p className="text-gray-400 text-sm">{lesson.description}</p>
+                          <p className="text-gray-400 text-xs">Длительность: {lesson.duration} мин</p>
+                          {lesson.description && (
                             <p className="text-gray-400 text-sm mt-1 line-clamp-1">
-                              {lesson.content.substring(0, 80)}...
+                              {lesson.description.substring(0, 80)}...
                             </p>
                           )}
                         </div>

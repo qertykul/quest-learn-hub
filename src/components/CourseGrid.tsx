@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Sparkles } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useProgress } from '@/context/ProgressContext';
+import { Lesson } from './CourseEditor';
 
 interface Course {
   id: number;
@@ -20,7 +21,7 @@ interface Course {
   image: string;
   lessons: number;
   completedLessons: number;
-  fullLessons?: any[];
+  fullLessons?: Lesson[];
 }
 
 export const CourseGrid = () => {

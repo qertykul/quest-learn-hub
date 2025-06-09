@@ -23,7 +23,7 @@ interface ProgressContextType {
   setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   updateCourseProgress: (courseId: number, lessonsCompleted: number) => void;
   getTotalXP: () => number;
-  getCompletedCourses: () => number;
+  getCompletedCourses: () => Course[];
   getUserLevel: () => number;
   resetAllProgress: () => void;
   getActiveUsers: () => number;
@@ -128,7 +128,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const getCompletedCourses = () => {
-    return courses.filter(course => course.progress === 100).length;
+    return courses.filter(course => course.progress === 100);
   };
 
   const getUserLevel = () => {

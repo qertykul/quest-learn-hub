@@ -1,21 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BookOpen, Save } from 'lucide-react';
 import { CourseBasicInfoForm } from './CourseBasicInfoForm';
 import { LessonManagement } from './LessonManagement';
 import { CourseImageSelector } from './CourseImageSelector';
 import { CourseStatsCard } from './CourseStatsCard';
 
-interface Lesson {
-  id: number;
-  title: string;
-  content: string;
-  duration: number;
-}
 
-interface Course {
+export interface Course {
   id: number;
   title: string;
   description: string;
@@ -25,28 +21,39 @@ interface Course {
   badge: string;
   image: string;
   lessons: number;
-  fullLessons?: Lesson[];
+  progress: number;
+  completedLessons: number;
+  fullLessons?: {
+    id: number;
+    title: string;
+    content: string;
+    duration: number;
+    completed: boolean;
+  }[];
   imageSize?: number;
 }
 
 interface CourseEditorProps {
   course?: Course;
-  onSave: (courseData: any) => void;
+  onSave: (courseData: Course) => void;
   onClose: () => void;
 }
 
 export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onClose }) => {
-  const [courseData, setCourseData] = useState({
+  const [courseData, setCourseData] = useState<Course>({
+    id: course?.id || Date.now(),
     title: course?.title || '',
     description: course?.description || '',
     author: course?.author || '',
-    level: course?.level || 'Начинающий',
-    xp: course?.xp || 100,
-    badge: course?.badge || '📚',
-    image: course?.image || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop',
+    level: course?.level || '',
+    xp: course?.xp || 0,
+    badge: course?.badge || '',
+    image: course?.image || '',
     lessons: course?.lessons || 0,
+    progress: course?.progress || 0,
+    completedLessons: course?.completedLessons || 0,
     fullLessons: course?.fullLessons || [],
-    imageSize: course?.imageSize || 100
+    imageSize: course?.imageSize || 300
   });
 
   // Автоматическое обновление количества уроков при изменении массива уроков
@@ -72,14 +79,12 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
     setCourseData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleAddLesson = (newLesson: Omit<Lesson, 'id'>) => {
-    const lesson: Lesson = {
-      id: Math.max(...courseData.fullLessons.map(l => l.id), 0) + 1,
-      ...newLesson
-    };
+  const handleLessonAddition = (newLesson: { title: string; content: string; duration: number; }) => {
+    const updatedLessons = [...(courseData.fullLessons || []), { ...newLesson, id: Date.now(), content: newLesson.content, completed: false }];
     setCourseData(prev => ({
       ...prev,
-      fullLessons: [...prev.fullLessons, lesson]
+      fullLessons: updatedLessons,
+      lessons: updatedLessons.length
     }));
   };
 
@@ -131,7 +136,7 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ course, onSave, onCl
 
             <LessonManagement
               lessons={courseData.fullLessons}
-              onAddLesson={handleAddLesson}
+              onAddLesson={handleLessonAddition}
               onUpdateLesson={handleUpdateLesson}
               onDeleteLesson={handleDeleteLesson}
               getTotalDuration={getTotalDuration}

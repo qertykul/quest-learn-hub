@@ -9,23 +9,11 @@ import { SystemToolsGrid } from './SystemToolsGrid';
 import { CourseManagementSection } from './CourseManagementSection';
 import { CoursePreviewDialog } from './CoursePreviewDialog';
 import { useAdminOperations } from './AdminOperations';
-import type { AdminModalState } from '@/types/admin';
+import { Lesson } from '@/types/adminOperations';
+import type { AdminModal, AdminModalSetter } from '@/types/admin';
+import type { Course } from './CourseEditor';
 
-// Use Course type from ProgressContext to ensure consistency
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  progress: number;
-  author: string;
-  level: string;
-  xp: number;
-  badge: string;
-  image: string;
-  lessons: number;
-  completedLessons: number;
-  fullLessons?: any[];
-}
+
 
 export const EnhancedAdminPanel = () => {
   const { courses, setCourses } = useProgress();
@@ -36,11 +24,11 @@ export const EnhancedAdminPanel = () => {
   const [showPreview, setShowPreview] = useState(false);
   const { showAdminModal } = useAdminOperations();
   
-  const [adminModal, setAdminModal] = useState<AdminModalState>({
+  const [adminModal, setAdminModal] = useState<AdminModal>({
     isOpen: false,
     title: '',
     operation: '',
-    status: 'info',
+    status: 'info' as const,
     message: '',
     details: []
   });
@@ -65,13 +53,20 @@ export const EnhancedAdminPanel = () => {
     setShowPreview(true);
   }, []);
 
-  const handleSaveCourse = useCallback((courseData: Partial<Course>) => {
+  const handleSaveCourse = useCallback((courseData: any) => {
     try {
       if (editingCourse) {
         setCourses(prev => prev.map(c => 
           c.id === editingCourse.id ? { ...c, ...courseData } : c
         ));
-        showAdminModal(setAdminModal, 'Управление курсами', 'Обновление курса', 'success', 'Курс успешно обновлен');
+        showAdminModal(setAdminModal, {
+      isOpen: true,
+      title: 'Управление курсами',
+      operation: 'Обновление курса',
+      status: 'success' as const,
+      message: 'Курс успешно обновлен',
+      details: []
+    });
       } else {
         const newCourse: Course = {
           id: Math.max(...courses.map(c => c.id), 0) + 1,
@@ -126,8 +121,8 @@ export const EnhancedAdminPanel = () => {
 
       {showCourseEditor && (
         <CourseEditor
-          course={editingCourse}
-          onSave={handleSaveCourse}
+          course={editingCourse as any}
+          onSave={(courseData: Course) => handleSaveCourse(courseData)}
           onClose={() => setShowCourseEditor(false)}
         />
       )}
